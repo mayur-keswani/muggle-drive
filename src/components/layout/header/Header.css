@@ -1,0 +1,20 @@
+.header{
+    height: 64px;
+    display: flex;
+    align-items: center;
+}
+
+.MuiGrid-root.MuiGrid-container{
+    padding: 0px;
+    margin: 0px;
+}
+.MuiGrid-root.MuiGrid-item{
+    height: 100%;
+    margin: 0;
+}
+
+@media(max-width:900px){
+    .header{
+        height: 128px;
+    }
+}

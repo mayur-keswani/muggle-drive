@@ -1,0 +1,10 @@
+.sideMenu{
+    display: flex !important;
+    height: calc(100vh - 64px);
+}
+@media (max-width: 900px) {
+  .sideMenu {
+    display: none !important;
+    height: calc(100vh - 128px);
+  }
+}
