@@ -4,12 +4,15 @@ import { CognitoUser } from 'amazon-cognito-identity-js';
 import React,{useContext} from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import {VerificationCodeComponent} from '../../components/verification-code/VerificationCodeComponent';
+import { NotificationContent } from '../../context/NotificationContext';
 import { UserContext } from '../../context/UserContext';
 import { userPool } from '../../utils/UserPool';
 
 
 const VerifyUser = () => {
    const {user} = useContext(UserContext);
+   const { updateNotification } = useContext(NotificationContent);
+
    const Navigate = useNavigate();
    
    const onSubmit=(code:string)=>{
@@ -21,9 +24,12 @@ const VerifyUser = () => {
     const cognitoUser = new CognitoUser(payload);
     cognitoUser.confirmRegistration(code, true, (err, result) => {
       if(err){
-        console.log(err)
+        // console.log(err);
+        updateNotification({type:"error",message:'Something went wrong!,Please contact Administerator'});
+
       }else if(result){
         if(result==='SUCCESS'){
+          updateNotification({type:"success",message:"You are Verified!, Welcome to MuggleDrive"})
           Navigate('/dashboard')
         }
       }

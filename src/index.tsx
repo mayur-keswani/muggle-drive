@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import { BrowserRouter  } from "react-router-dom";
 import UserContextProvider from './context/UserContext';
+import NotificationProvider from './context/NotificationContext';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -11,7 +12,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <BrowserRouter>
     <UserContextProvider>
-      <App />
+      <NotificationProvider>
+        <App />
+      </NotificationProvider>
     </UserContextProvider>
   </BrowserRouter>
 );

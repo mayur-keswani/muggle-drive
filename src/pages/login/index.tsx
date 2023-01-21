@@ -14,10 +14,12 @@ import {
 } from "amazon-cognito-identity-js";
 import { userPool } from "../../utils/UserPool";
 import { UserContext } from "../../context/UserContext";
+import { NotificationContent } from "../../context/NotificationContext";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const {updateNotification} = useContext(NotificationContent)
   const navigate = useNavigate();
 
   const {updateUserHandler}=useContext(UserContext)
@@ -76,11 +78,14 @@ const Login = () => {
         //     "clockDrift": 0
         // }
         updateUserHandler({
+          username,
           idToken: result.getIdToken().getJwtToken(),
           refreshToken: result.getRefreshToken().getToken(),
           accessToken: result.getAccessToken().getJwtToken(),
         });
+        updateNotification({type:"success",message:'Login Successfull'});
         if(result.isValid()){
+
             navigate("/dashboard");
         }else{
           navigate('/verify')
@@ -88,6 +93,8 @@ const Login = () => {
       },
       onFailure(error) {
         console.log(error);
+        updateNotification({ type: "error", message: error.message  });
+
       },
     });
   };

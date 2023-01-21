@@ -15,7 +15,7 @@ function App() {
         <Route
           path="/dashboard/:path"
           element={
-            <Layout>
+            <Layout showHeader>
               <Dashboard />
             </Layout>
           }
@@ -24,12 +24,40 @@ function App() {
           path="dashboard"
           element={<Navigate to="/dashboard/my-drive" replace />}
         />
-        <Route path="/" element={<Signup />} />
+        <Route
+          path="/"
+          element={
+            <Layout showHeader={false}>
+              <Signup />
+            </Layout>
+          }
+        />
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/login"
+          element={
+            <Layout showHeader={false}>
+              <Login />
+            </Layout>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <Layout showHeader={false}>
+              <Signup />
+            </Layout>
+          }
+        />
 
-        <Route path="/verify" element={<VerifyUser />} />
+        <Route
+          path="/verify"
+          element={
+            <Layout showHeader={false}>
+              <VerifyUser />
+            </Layout>
+          }
+        />
       </Routes>
     </div>
   );

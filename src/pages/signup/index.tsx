@@ -10,12 +10,15 @@ import { useNavigate } from "react-router-dom";
 import { userPool } from "../../utils/UserPool";
 import { CognitoUserAttribute } from "amazon-cognito-identity-js";
 import { UserContext } from "../../context/UserContext";
+import { NotificationContent } from "../../context/NotificationContext";
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
 
-  const {updateUserHandler} = useContext(UserContext); 
+  const { updateUserHandler } = useContext(UserContext);
+  const { updateNotification } = useContext(NotificationContent);
+
   const navigate = useNavigate();
 
   const onSubmitHandler = () => {
@@ -36,10 +39,13 @@ const Signup = () => {
             console.log(err);
             // returnData = { "result ": "fail", data: err.message };
             console.log(err.message);
+            updateNotification({type:"error",message:err.message});
           } else {
             // {"AttributeName": "email","DeliveryMedium": "EMAIL","Destination": "m***@g***"};
             console.log(result);
-            updateUserHandler({username});
+            updateNotification({type:"success",message:"Signup Successfull,Please Check you Mail for Verification code!"});
+              
+            updateUserHandler({ username });
             navigate(`/verify`);
           }
         }
