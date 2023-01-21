@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material';
 import Button from '@mui/material/Button/Button';
 import { CognitoUser } from 'amazon-cognito-identity-js';
 import React,{useContext} from 'react'
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import {VerificationCodeComponent} from '../../components/verification-code/VerificationCodeComponent';
 import { UserContext } from '../../context/UserContext';
 import { userPool } from '../../utils/UserPool';
@@ -10,7 +10,8 @@ import { userPool } from '../../utils/UserPool';
 
 const VerifyUser = () => {
    const {user} = useContext(UserContext);
-
+   const Navigate = useNavigate();
+   
    const onSubmit=(code:string)=>{
     console.log(code)
     const payload = {
@@ -22,13 +23,26 @@ const VerifyUser = () => {
       if(err){
         console.log(err)
       }else if(result){
-        console.log(result)
+        if(result==='SUCCESS'){
+          Navigate('/dashboard')
+        }
       }
     });
   };
 
   const reSendCode=()=>{
-    
+    const payload = {
+      Username: user.username,
+      Pool: userPool,
+    };
+    const cognitoUser = new CognitoUser(payload);
+    cognitoUser.resendConfirmationCode(function (err, result) {
+      if (err) {
+        alert(err.message || JSON.stringify(err));
+        return;
+      }
+      console.log("call result: " + result);
+    });
   }
   return (
     <div className="container">
@@ -57,7 +71,7 @@ const VerifyUser = () => {
           onChange={() => {}}
           onComplete={onSubmit}
         />
-        <Button>Resent Code</Button>
+        <Button onClick={reSendCode}>Resent Code</Button>
       </Box>
       <Box sx={{ display: "flex" }}></Box>
     </div>
