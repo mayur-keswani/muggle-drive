@@ -15,11 +15,16 @@ import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import { useParams } from "react-router-dom";
+import CreateFolder from "../../components/modals/createFolder/CreateFolder";
+import UploadAssets from "../../components/modals/uploadAssets/UploadAssets";
 
 const Drive = () => {
   const {path} = useParams()
   const [showUploadingOptions,setShowUploadingOption] = useState<null | HTMLElement>(null)
   const [heading,setHeader] = useState<string>('My Drive');
+  const [showCreateFolderModal, setShowCreateForderModal] = React.useState(false);
+  const [showUploadAssetsModal,setShowUploadAssetsModal] = useState(false)
+ 
 
   useEffect(() => {
     if (path) {
@@ -45,6 +50,8 @@ const Drive = () => {
   const folders = ["first", "second"];
   return (
     <Grid container>
+      <CreateFolder isOpen={showCreateFolderModal} closeModal={()=>{setShowCreateForderModal(false)}}/>
+      <UploadAssets isOpen={showUploadAssetsModal} closeModal={()=>{setShowUploadAssetsModal(false)}}/>
       <Grid md={2} className="d-flex align-items-center sideMenu">
         <MenuDrawer />
       </Grid>
@@ -67,6 +74,7 @@ const Drive = () => {
               // margin: "1rem",
               backgroundColor: "#f1f3f4",
             }}
+            
             onClick={(e: any) => {
               setShowUploadingOption(e.target);
             }}
@@ -80,14 +88,16 @@ const Drive = () => {
               setShowUploadingOption(null);
             }}
           >
-            <MenuItem>
+            <MenuItem onClick={()=>{ setShowCreateForderModal(true)}}>
               <ListItemIcon>
                 <CreateNewFolderIcon />
               </ListItemIcon>
               <ListItemText>New Folder</ListItemText>
             </MenuItem>
             <Divider />
-            <MenuItem>
+            <MenuItem onClick={()=>{
+              setShowUploadAssetsModal(true);
+            }}>
               <ListItemIcon>
                 <UploadFileIcon />
               </ListItemIcon>

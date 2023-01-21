@@ -28,7 +28,7 @@ code {
     monospace;
 }
 
-.appTitle{
+.gradiendText{
   background: var(--rainbow-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

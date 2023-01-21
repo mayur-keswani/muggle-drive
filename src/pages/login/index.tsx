@@ -15,7 +15,7 @@ const Login = () => {
   };
   return (
     <main className="d-flex flex-column align-items-center justify-content-center h-100">
-      <Typography variant="h3" className="appTitle">
+      <Typography variant="h3" className="gradiendText">
         Welcome to MuggleDrive
       </Typography>
       <Typography variant="h6" color="text.secondary">

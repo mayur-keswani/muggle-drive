@@ -1,0 +1,11 @@
+.cropped-image-section:hover>.update-cropped-image-section{
+    display: flex !important;
+    position: absolute;
+    top:0;
+    left:0;
+    z-index: 10000;
+    height: 100%;
+    width: 100%;
+    background-color: gray;
+    opacity: 0.7;
+}
