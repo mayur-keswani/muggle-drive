@@ -4,7 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
-import { Button, CardActionArea, CardActions } from "@mui/material";
+import { Box, Button, CardActionArea, CardActions } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { useNavigate } from "react-router-dom";
 import { userPool } from "../../utils/UserPool";
@@ -64,7 +64,7 @@ const Signup = () => {
         Clone of Google Drive
       </Typography>
 
-      <Card sx={{ width: "450px", height: "400px", margin: "2em" }}>
+      <Card sx={{ width: "450px", height: "auto", margin: "2em" }}>
         <div className="d-flex justify-content-center flex-column align-items-center p-2">
           <Avatar
             alt="Travis Howard"
@@ -99,7 +99,25 @@ const Signup = () => {
               setPassword(e.target.value);
             }}
           />
-
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+            }}
+          >
+            <Typography color={"text.secondary"}>
+              Already have account?
+            </Typography>
+            <Button
+              onClick={() => {
+                navigate("/login");
+              }}
+            >
+              Login
+            </Button>
+          </Box>
           <Button
             sx={{ width: "100%", margin: "1em" }}
             variant="contained"

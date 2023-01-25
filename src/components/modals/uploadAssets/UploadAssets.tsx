@@ -117,7 +117,7 @@ export default function UploadAssets({ isOpen, closeModal }: CreateFolderType) {
                       cursor: "pointer",
                     }}
                   >
-                    <Typography sx={{ color: "#3c4043" }}>
+                    <Typography sx={{ color: "#3c4043",maxWidth:'220px',overflowX:'scroll' }}>
                       {file?.name}
                     </Typography>
                     <div>

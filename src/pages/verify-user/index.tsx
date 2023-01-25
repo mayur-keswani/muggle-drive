@@ -30,7 +30,7 @@ const VerifyUser = () => {
       }else if(result){
         if(result==='SUCCESS'){
           updateNotification({type:"success",message:"You are Verified!, Welcome to MuggleDrive"})
-          Navigate('/dashboard')
+          Navigate('/login')
         }
       }
     });
@@ -77,7 +77,10 @@ const VerifyUser = () => {
           onChange={() => {}}
           onComplete={onSubmit}
         />
-        <Button onClick={reSendCode}>Resent Code</Button>
+        <Box
+        >
+          <Button onClick={reSendCode}>Resent Code</Button>
+        </Box>
       </Box>
       <Box sx={{ display: "flex" }}></Box>
     </div>
