@@ -1,12 +1,11 @@
 import React, { useContext, useState } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
-import { Box, Button, CardActionArea, CardActions } from "@mui/material";
+import { Box, Button} from "@mui/material";
 import TextField from "@mui/material/TextField";
-import { Navigate, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import {
   AuthenticationDetails,
   CognitoUser,
@@ -15,10 +14,12 @@ import {
 import { userPool } from "../../utils/UserPool";
 import { UserContext } from "../../context/UserContext";
 import { NotificationContent } from "../../context/NotificationContext";
+import {LoadingButton} from "@mui/lab";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading,setIsLoading] = useState(false)
   const {updateNotification} = useContext(NotificationContent)
   const navigate = useNavigate();
 
@@ -32,9 +33,13 @@ const Login = () => {
       Username: username,
       Pool: userPool,
     };
+    
+    setIsLoading(true);
+
     const cognitoUser = new CognitoUser(poolPayload);
     cognitoUser.authenticateUser(payload, {
       onSuccess(result: CognitoUserSession) {
+        setIsLoading(false)
         console.log(result);
         // {
         // "idToken": {
@@ -94,6 +99,7 @@ const Login = () => {
       },
       onFailure(error) {
         console.log(error);
+        setIsLoading(false)
         updateNotification({ type: "error", message: error.message  });
 
       },
@@ -145,7 +151,10 @@ const Login = () => {
               alignItems: "center",
             }}
           >
-            <Typography color={'text.secondary'}> Don't have account? </Typography>
+            <Typography color={"text.secondary"}>
+              {" "}
+              Don't have account?{" "}
+            </Typography>
             <Button
               onClick={() => {
                 navigate("/signup");
@@ -154,14 +163,15 @@ const Login = () => {
               Signup
             </Button>
           </Box>
-          <Button
+          <LoadingButton
             sx={{ width: "100%", margin: "1em" }}
             variant="contained"
             size="medium"
             onClick={onSubmitHandler}
+            loading={isLoading}
           >
             Sign In
-          </Button>
+          </LoadingButton>
         </CardContent>
       </Card>
     </main>

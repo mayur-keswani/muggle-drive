@@ -5,6 +5,7 @@ import App from './App';
 import { BrowserRouter  } from "react-router-dom";
 import UserContextProvider from './context/UserContext';
 import NotificationProvider from './context/NotificationContext';
+import FoldersProvider from './context/FolderContext';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -12,9 +13,11 @@ const root = ReactDOM.createRoot(
 root.render(
   <BrowserRouter>
     <UserContextProvider>
-      <NotificationProvider>
-        <App />
-      </NotificationProvider>
+      <FoldersProvider>
+        <NotificationProvider>
+          <App />
+        </NotificationProvider>
+      </FoldersProvider>
     </UserContextProvider>
   </BrowserRouter>
 );

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React,{useContext,useState} from "react";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -7,6 +7,10 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { TextField } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { NotificationContent } from "../../../context/NotificationContext";
+import { createFolder } from "../../../lib/lambdaApi";
+import { FoldersContent } from "../../../context/FolderContext";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -24,9 +28,26 @@ type CreateFolderType={
     isOpen:boolean,
     closeModal:any
 }
+
 export default function CreateFolder({isOpen,closeModal}:CreateFolderType) {
-
-
+  const [name,setName] = React.useState('')
+  const {updateNotification}=useContext(NotificationContent)
+  const {addFolder} = useContext(FoldersContent)
+  
+  const onSubmit=async()=>{
+    try{
+      const response =await  createFolder({name,parentRef:''});
+      console.log(response)
+      updateNotification({
+        type: "success",
+        message: 'Folder Created!',
+      });
+      closeModal()
+      
+    }catch(error:any){
+      updateNotification({type:'error',message:error.response?.data?.message})
+    }
+  }
   return (
     <div>
       <Modal
@@ -52,14 +73,15 @@ export default function CreateFolder({isOpen,closeModal}:CreateFolderType) {
               required
               id="outlined-required"
               label="name"
-              defaultValue="Hello World"
+              value={name}
+              onChange={(e)=>{setName(e.target.value)}}
               sx={{ width: "100%", margin: "1em 0em" }}
             />
             <Button
               sx={{ width: "100%" }}
               variant="contained"
               size="medium"
-              //   onClick={onSubmitHandler}
+                onClick={onSubmit}
             >
               Create
             </Button>
