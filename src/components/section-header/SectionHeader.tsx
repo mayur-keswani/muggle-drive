@@ -13,8 +13,10 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
+import { SectionType } from "../../lib/types.index";
 
 type SectionHeaderPropType={
+    sectionType:SectionType,
     title:string,
     allowUploading:boolean
 }
@@ -28,6 +30,7 @@ const SectionHeader:React.FC<SectionHeaderPropType> = (props) => {
   return (
     <Box sx={{margin:'1rem'}}>
       <CreateFolder
+        sectionType={props.sectionType}
         isOpen={showCreateFolderModal}
         closeModal={() => {
           setShowCreateForderModal(false);

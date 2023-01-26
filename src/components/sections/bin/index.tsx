@@ -10,6 +10,7 @@ import { NotificationContent } from "../../../context/NotificationContext";
 import { FolderStructureType } from "../../../lib/types.index";
 import { FoldersContent } from "../../../context/FolderContext";
 import SectionHeader from "../../section-header/SectionHeader";
+import { BIN } from "../../../context/constants";
 
 const Bin = () => {
   const { updateNotification } = useContext(NotificationContent);
@@ -24,7 +25,7 @@ const Bin = () => {
     try {
       const response: any = await fetchFolders();
       console.log(response.data);
-      addFolder(response.data.body.Items);
+      addFolder(BIN,response.data.body.Items);
     } catch (error: any) {
       console.log(error);
       updateNotification({
@@ -38,7 +39,7 @@ const Bin = () => {
   }, []);
   return (
     <>
-      <SectionHeader allowUploading={false} title={"Bin"} />
+      <SectionHeader sectionType={BIN} allowUploading={false} title={"Bin"} />
 
       <Box sx={{ padding: "0px 1em" }}>
         <Typography sx={{ margin: "1em 0em" }} color={"text.secondary"}>
@@ -60,7 +61,7 @@ const Bin = () => {
         </Typography>
 
         <Grid container spacing={1}>
-          {folders.map((data: FolderStructureType) => (
+          {folders[BIN].map((data: FolderStructureType) => (
             <Grid xs={12} md={3} xl={3}>
               <Folder width="250px" height="50px" name={data.name}></Folder>
             </Grid>

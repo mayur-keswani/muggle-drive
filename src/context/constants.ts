@@ -1,0 +1,6 @@
+export const MY_DRIVE = "MY_DRIVE"
+export const COMPUTER = "COMPUTER"
+export const BIN = "BIN"
+export const STARRED = "STARRED"
+export const SHARED = "SHARED"
+export const RECENT = "RECENT"

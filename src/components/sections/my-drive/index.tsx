@@ -11,6 +11,7 @@ import { NotificationContent } from "../../../context/NotificationContext";
 import { FolderStructureType } from "../../../lib/types.index";
 import { FoldersContent } from "../../../context/FolderContext";
 import SectionHeader from "../../section-header/SectionHeader";
+import { MY_DRIVE } from "../../../context/constants";
 
 const MyDrive = () => {
 
@@ -27,10 +28,8 @@ const MyDrive = () => {
   const loadFolders=async()=>{
     try {
       const response:any = await fetchFolders();
-      console.log(response.data)
-      addFolder(response.data.body.Items);
+      addFolder(MY_DRIVE, response.data.body.Items);
     } catch (error:any) {
-      console.log(error)
       updateNotification({
         type: "error",
         message: error?.response?.data?.message,
@@ -40,9 +39,14 @@ const MyDrive = () => {
   useEffect(()=>{
     loadFolders()
   },[])
+  console.log(folders[MY_DRIVE]);
   return (
     <>
-      <SectionHeader allowUploading={true} title={'MyDrive'}/>
+      <SectionHeader
+        sectionType={MY_DRIVE}
+        allowUploading={true}
+        title={"MyDrive"}
+      />
 
       <Box sx={{ padding: "0px 1em" }}>
         <Typography sx={{ margin: "1em 0em" }} color={"text.secondary"}>
@@ -64,8 +68,8 @@ const MyDrive = () => {
         </Typography>
 
         <Grid container spacing={1}>
-          {folders.map((data: FolderStructureType) => (
-            <Grid xs={12} md={3} xl={3}>
+          {folders.MY_DRIVE.map((data: FolderStructureType) => (
+            <Grid xs={12} md={3} xl={3} key={data.id}>
               <Folder width="250px" height="50px" name={data.name}></Folder>
             </Grid>
           ))}

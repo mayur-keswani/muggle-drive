@@ -11,10 +11,12 @@ import { userPool } from "../../utils/UserPool";
 import { CognitoUserAttribute } from "amazon-cognito-identity-js";
 import { UserContext } from "../../context/UserContext";
 import { NotificationContent } from "../../context/NotificationContext";
+import { LoadingButton } from "@mui/lab";
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [isLoading,setIsloading] = useState(false)
 
   const { updateUserHandler } = useContext(UserContext);
   const { updateNotification } = useContext(NotificationContent);
@@ -29,6 +31,7 @@ const Signup = () => {
     });
 
     try {
+      setIsloading(true)
       userPool.signUp(
         username,
         password,
@@ -36,11 +39,13 @@ const Signup = () => {
         [],
         function (err, result) {
           if (err) {
-            console.log(err);
+            setIsloading(false)
             // returnData = { "result ": "fail", data: err.message };
             console.log(err.message);
             updateNotification({type:"error",message:err.message});
           } else {
+            setIsloading(false);
+
             // {"AttributeName": "email","DeliveryMedium": "EMAIL","Destination": "m***@g***"};
             console.log(result);
             updateNotification({type:"success",message:"Signup Successfull,Please Check you Mail for Verification code!"});
@@ -118,14 +123,16 @@ const Signup = () => {
               Login
             </Button>
           </Box>
-          <Button
+
+          <LoadingButton
             sx={{ width: "100%", margin: "1em" }}
             variant="contained"
             size="medium"
             onClick={onSubmitHandler}
+            loading={isLoading}
           >
             Sign Up
-          </Button>
+          </LoadingButton>
         </CardContent>
       </Card>
     </main>

@@ -10,6 +10,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { NotificationContent } from "../../../context/NotificationContext";
 import { createFolder } from "../../../lib/lambdaApi";
 import { FoldersContent } from "../../../context/FolderContext";
+import { SectionType } from "../../../lib/types.index";
 
 const style = {
   position: "absolute",
@@ -25,11 +26,12 @@ const style = {
 };
 
 type CreateFolderType={
+    sectionType:SectionType,
     isOpen:boolean,
     closeModal:any
 }
 
-export default function CreateFolder({isOpen,closeModal}:CreateFolderType) {
+export default function CreateFolder({sectionType,isOpen,closeModal}:CreateFolderType) {
   const [name,setName] = React.useState('')
   const {updateNotification}=useContext(NotificationContent)
   const {addFolder} = useContext(FoldersContent)
@@ -37,7 +39,7 @@ export default function CreateFolder({isOpen,closeModal}:CreateFolderType) {
   const onSubmit=async()=>{
     try{
       const response =await  createFolder({name,parentRef:''});
-      console.log(response)
+      addFolder(sectionType,response.data.body)
       updateNotification({
         type: "success",
         message: 'Folder Created!',
