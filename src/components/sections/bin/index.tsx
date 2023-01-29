@@ -30,7 +30,7 @@ const Bin:React.FC<DashBoardSectionPropType> = (props) => {
   const loadFolders = async () => {
     try {
       setIsFoldersLoading(true);
-      const response: any = await fetchFolders();
+      const response: any = await fetchFolders(BIN);
       console.log(response.data);
       setIsFoldersLoading(false);
       setInitialFolderList(BIN, response.data.body.Items);

@@ -14,7 +14,10 @@ export type FolderStructureType = {
 
   name: string;
   parentRef: string; // points to the parent folder
-  status: 'ACTIVE' | 'STARRED' | 'DELETED'
+
+  isDeleted: boolean;
+  isShared: boolean;
+  isStarred: boolean;
 
   creationDate: string;
 };
@@ -24,7 +27,10 @@ export type FileStructureType = {
 
   name: string;
   parentRef: string; // points to the parent folder
-  status: "ACTIVE" | "STARRED" | "DELETED";
+
+  isDeleted:boolean;
+  isShared:boolean;
+  isStarred:boolean;
 
   fileType: string;
   size: number;

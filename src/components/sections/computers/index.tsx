@@ -30,7 +30,7 @@ const Computers:React.FC<DashBoardSectionPropType> = (props) => {
   const loadFolders = async () => {
     try {
       setIsFoldersLoading(true)
-      const response: any = await fetchFolders();
+      const response: any = await fetchFolders(COMPUTER);
       console.log(response.data);
       setIsFoldersLoading(false);
 

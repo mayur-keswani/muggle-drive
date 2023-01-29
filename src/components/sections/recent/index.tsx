@@ -29,7 +29,7 @@ const Recent:React.FC<DashBoardSectionPropType> = (props) => {
   const loadFolders = async () => {
     try {
       setIsFoldersLoading(true);
-      const response: any = await fetchFolders();
+      const response: any = await fetchFolders(RECENT);
       setIsFoldersLoading(false);
 
       setInitialFolderList(RECENT, response.data.body.Items);

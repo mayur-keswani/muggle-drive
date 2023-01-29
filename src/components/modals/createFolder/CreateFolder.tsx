@@ -38,7 +38,7 @@ export default function CreateFolder({sectionType,isOpen,closeModal}:CreateFolde
   
   const onSubmit=async()=>{
     try{
-      const response =await  createFolder({name,parentRef:''});
+      const response =await  createFolder({name,parentRef:'0'});
       addFolder(sectionType,response.data.body)
       updateNotification({
         type: "success",
