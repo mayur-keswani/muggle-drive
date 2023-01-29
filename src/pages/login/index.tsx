@@ -97,6 +97,7 @@ const Login = () => {
         }else{
           navigate('/verify')
         }
+        
       },
       onFailure(error) {
         console.log(error);
