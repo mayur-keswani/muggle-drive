@@ -4,14 +4,14 @@ import React, { useContext, useEffect, useState } from "react";
 import { Box,Button, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 
-import Folder from "../../folders/Folder";
-import Asset from "../../Assets/Asset";
-import { fetchFolders } from "../../../lib/lambdaApi";
-import { NotificationContent } from "../../../context/NotificationContext";
-import { FolderStructureType, SectionType } from "../../../lib/types.index";
-import { FoldersContent } from "../../../context/FolderContext";
-import SectionHeader from "../../section-header/SectionHeader";
-import { BIN, COMPUTER, MY_DRIVE, SHARED, STARRED } from "../../../context/constants";
+import Folder from "../folders/Folder";
+import Asset from "../Assets/Asset";
+import { fetchFolders } from "../../lib/lambdaApi";
+import { NotificationContent } from "../../context/NotificationContext";
+import { FolderStructureType, SectionType } from "../../lib/types.index";
+import { FoldersContent } from "../../context/FolderContext";
+import SectionHeader from "../section-header/SectionHeader";
+import { BIN, COMPUTER, MY_DRIVE, SHARED, STARRED } from "../../context/constants";
 import Skeleton from "@mui/material/Skeleton";
 import { useParams } from "react-router-dom";
 

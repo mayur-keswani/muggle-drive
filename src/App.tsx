@@ -7,15 +7,9 @@ import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
 import VerifyUser from "./pages/verify-user";
-import MyDrive from "./components/sections/my-drive";
-import Computers from "./components/sections/computers";
-import Bin from "./components/sections/bin";
-import Recent from "./components/sections/recent";
-import Shared from "./components/sections/shared";
-import Starred from "./components/sections/starred";
+import MyDrive from "./components/drive";
 import { UserContext } from "./context/UserContext";
 import Folders from "./components/folders/Folders";
-import { BIN, COMPUTER, MY_DRIVE, RECENT, SHARED, STARRED } from "./context/constants";
 
 const ProtectedRoute = (props:any) => {
   if (!props.user.isLoggedIn) {
