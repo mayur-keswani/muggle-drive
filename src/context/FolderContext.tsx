@@ -1,21 +1,25 @@
 import React, { useState } from "react";
 import { FolderStructureType, SectionType } from "../lib/types.index";
-import {MY_DRIVE,COMPUTER,SHARED,STARRED,BIN} from './constants';
 
 export const FoldersContent = React.createContext<{
   folders: Record<SectionType, any[]>;
+  setInitialFolderList: (
+    type: SectionType,
+    payload: FolderStructureType[]
+  ) => void;
   addFolder: (type: SectionType, payload: FolderStructureType) => void;
   removeFolder: (type: SectionType, id: string) => void;
   updateFolder: (type: SectionType, payload: FolderStructureType) => void;
 }>({
   folders: {
-    MY_DRIVE: [],
-    COMPUTER: [],
-    SHARED: [],
-    STARRED: [],
-    BIN: [],
-    RECENT:[],
+    "my-drive": [],
+    computers: [],
+    shared: [],
+    starred: [],
+    bin: [],
+    recent: [],
   },
+  setInitialFolderList: () => {},
   addFolder: () => {},
   removeFolder: () => {},
   updateFolder: () => {},
@@ -24,8 +28,12 @@ export const FoldersContent = React.createContext<{
 const FoldersProvider = (props: any) => {
   const [folders, setFolders] = useState<
     Record<SectionType, FolderStructureType[]>
-  >({ MY_DRIVE: [], COMPUTER: [], SHARED: [], STARRED: [], BIN: [], RECENT:[] });
+  >({ "my-drive": [], "computers": [], "shared": [], "starred": [], "bin": [], "recent":[] });
  
+  const setInitialFolderList=(type:SectionType,payload:FolderStructureType[])=>{
+    setFolders((prevValues)=>({...prevValues,[type]:payload}))
+  }
+
   const addFolder = (type: SectionType, payload: FolderStructureType) => {
     let upldatedList = folders[type].concat(payload)
 
@@ -59,6 +67,7 @@ const FoldersProvider = (props: any) => {
     <FoldersContent.Provider
       value={{
         folders,
+        setInitialFolderList,
         addFolder,
         removeFolder,
         updateFolder,

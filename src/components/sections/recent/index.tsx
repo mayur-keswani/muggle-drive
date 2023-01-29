@@ -12,9 +12,14 @@ import { FoldersContent } from "../../../context/FolderContext";
 import SectionHeader from "../../section-header/SectionHeader";
 import { RECENT } from "../../../context/constants";
 
-const Recent = () => {
+
+type DashBoardSectionPropType = {
+  showFolders: boolean;
+  showFiles: boolean;
+};
+const Recent:React.FC<DashBoardSectionPropType> = (props) => {
   const { updateNotification } = useContext(NotificationContent);
-  const { folders, addFolder } = useContext(FoldersContent);
+  const { folders, setInitialFolderList } = useContext(FoldersContent);
 
   const assets = [
     { type: "pdf", name: "demo" },
@@ -25,7 +30,7 @@ const Recent = () => {
     try {
       const response: any = await fetchFolders();
       console.log(response.data);
-      addFolder(RECENT,response.data.body.Items);
+      setInitialFolderList(RECENT, response.data.body.Items);
     } catch (error: any) {
       console.log(error);
       updateNotification({
@@ -45,9 +50,10 @@ const Recent = () => {
         title={"Recent"}
       />
 
+      {props.showFiles && 
       <Box sx={{ padding: "0px 1em" }}>
         <Typography sx={{ margin: "1em 0em" }} color={"text.secondary"}>
-          Recents
+          Files
         </Typography>
 
         <Grid container spacing={1}>
@@ -57,7 +63,10 @@ const Recent = () => {
             </Grid>
           ))}
         </Grid>
-      </Box>
+      </Box>}
+
+
+      {props.showFolders && 
 
       <Box sx={{ padding: "0px 1em" }}>
         <Typography sx={{ margin: "1em 0em" }} color={"text.secondary"}>
@@ -67,11 +76,17 @@ const Recent = () => {
         <Grid container spacing={1}>
           {folders[RECENT].map((data: FolderStructureType) => (
             <Grid xs={12} md={3} xl={3}>
-              <Folder width="250px" height="50px" name={data.name}></Folder>
+              <Folder
+                width="250px"
+                height="50px"
+                sectionType={RECENT}
+                data={data}
+              ></Folder>
             </Grid>
           ))}
         </Grid>
       </Box>
+}
     </>
   );
 };

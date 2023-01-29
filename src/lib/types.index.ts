@@ -1,3 +1,4 @@
+import { type } from "os";
 import {
   BIN,
   COMPUTER,
@@ -14,6 +15,20 @@ export type FolderStructureType = {
   name: string;
   parentRef: string; // points to the parent folder
   status: 'ACTIVE' | 'STARRED' | 'DELETED'
+
+  creationDate: string;
+};
+export type FileStructureType = {
+  id: string;
+  userId: string;
+
+  name: string;
+  parentRef: string; // points to the parent folder
+  status: "ACTIVE" | "STARRED" | "DELETED";
+
+  fileType: string;
+  size: number;
+  fileUrl: string;
 
   creationDate: string;
 };

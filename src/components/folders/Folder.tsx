@@ -3,12 +3,18 @@ import Box from "@mui/material/Box";
 import FolderIcon from "@mui/icons-material/Folder";
 import './Folder.css'
 import { Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { FolderStructureType, SectionType } from "../../lib/types.index";
+
 type FolderType = {
-  name: string;
+  data: FolderStructureType;
+  sectionType:SectionType;
   width: string;
   height: string;
 };
-export default function Folder({ name, width, height }: FolderType) {
+export default function Folder({ data,sectionType, width, height }: FolderType) {
+  const navigate =useNavigate();
+  console.log(data)
   return (
     <Box
       sx={{
@@ -26,13 +32,16 @@ export default function Folder({ name, width, height }: FolderType) {
         padding: "1em",
         cursor: "pointer",
       }}
+      onClick={()=>{
+        navigate(`/dashboard/${sectionType}/folders/${data.id}`)
+      }}
     >
       <FolderIcon
         style={{ color: "#3c4043", marginRight: "10px" }}
         fontSize="large"
       />
       <Typography sx={{ color: "#3c4043" }}>
-        {name}
+        {data?.name}
       </Typography>
     </Box>
   );

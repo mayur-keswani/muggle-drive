@@ -13,10 +13,14 @@ import { FoldersContent } from "../../../context/FolderContext";
 import SectionHeader from "../../section-header/SectionHeader";
 import { MY_DRIVE } from "../../../context/constants";
 
-const MyDrive = () => {
+type DashBoardSectionPropType={
+  showFolders:boolean,
+  showFiles:boolean
+}
+const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
 
   const { updateNotification } = useContext(NotificationContent);
-  const {folders,addFolder} = useContext(FoldersContent)
+  const {folders,setInitialFolderList} = useContext(FoldersContent)
 
 
 
@@ -28,7 +32,7 @@ const MyDrive = () => {
   const loadFolders=async()=>{
     try {
       const response:any = await fetchFolders();
-      addFolder(MY_DRIVE, response.data.body.Items);
+      setInitialFolderList(MY_DRIVE, response.data.body.Items);
     } catch (error:any) {
       updateNotification({
         type: "error",
@@ -47,34 +51,40 @@ const MyDrive = () => {
         allowUploading={true}
         title={"MyDrive"}
       />
+      
+      {
+        props.showFiles &&
+        <Box sx={{ padding: "0px 1em" }}>
+          <Typography sx={{ margin: "1em 0em" }} color={"text.secondary"}>
+            Files
+          </Typography>
 
-      <Box sx={{ padding: "0px 1em" }}>
-        <Typography sx={{ margin: "1em 0em" }} color={"text.secondary"}>
-          Recents
-        </Typography>
+          <Grid container spacing={1}>
+            {assets.map((asset) => (
+              <Grid xs={12} md={3} xl={3}>
+                <Asset type="pdf" details={asset} />
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      }
 
-        <Grid container spacing={1}>
-          {assets.map((asset) => (
-            <Grid xs={12} md={3} xl={3}>
-              <Asset type="pdf" details={asset} />
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
+      {
+        props.showFolders &&
+        <Box sx={{ padding: "0px 1em" }}>
+          <Typography sx={{ margin: "1em 0em" }} color={"text.secondary"}>
+            Folders
+          </Typography>
 
-      <Box sx={{ padding: "0px 1em" }}>
-        <Typography sx={{ margin: "1em 0em" }} color={"text.secondary"}>
-          Folders
-        </Typography>
-
-        <Grid container spacing={1}>
-          {folders.MY_DRIVE.map((data: FolderStructureType) => (
-            <Grid xs={12} md={3} xl={3} key={data.id}>
-              <Folder width="250px" height="50px" name={data.name}></Folder>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
+          <Grid container spacing={1}>
+            {folders[MY_DRIVE].map((data: FolderStructureType) => (
+              <Grid xs={12} md={3} xl={3} key={data.id}>
+                <Folder width="250px" height="50px" sectionType={MY_DRIVE} data={data}></Folder>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>    
+      }
     </>
   );
 };

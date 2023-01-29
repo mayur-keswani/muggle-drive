@@ -6,6 +6,7 @@ import { BrowserRouter  } from "react-router-dom";
 import UserContextProvider from './context/UserContext';
 import NotificationProvider from './context/NotificationContext';
 import FoldersProvider from './context/FolderContext';
+import FilesProvider from './context/FileContext';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -14,9 +15,11 @@ root.render(
   <BrowserRouter>
     <UserContextProvider>
       <FoldersProvider>
-        <NotificationProvider>
-          <App />
-        </NotificationProvider>
+        <FilesProvider>
+          <NotificationProvider>
+            <App />
+          </NotificationProvider>
+        </FilesProvider>
       </FoldersProvider>
     </UserContextProvider>
   </BrowserRouter>

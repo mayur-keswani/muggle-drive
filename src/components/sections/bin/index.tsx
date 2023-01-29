@@ -12,9 +12,13 @@ import { FoldersContent } from "../../../context/FolderContext";
 import SectionHeader from "../../section-header/SectionHeader";
 import { BIN } from "../../../context/constants";
 
-const Bin = () => {
+type DashBoardSectionPropType = {
+  showFolders: boolean;
+  showFiles: boolean;
+};
+const Bin:React.FC<DashBoardSectionPropType> = (props) => {
   const { updateNotification } = useContext(NotificationContent);
-  const { folders, addFolder } = useContext(FoldersContent);
+  const { folders, setInitialFolderList } = useContext(FoldersContent);
 
   const assets = [
     { type: "pdf", name: "demo" },
@@ -25,7 +29,7 @@ const Bin = () => {
     try {
       const response: any = await fetchFolders();
       console.log(response.data);
-      addFolder(BIN,response.data.body.Items);
+      setInitialFolderList(BIN, response.data.body.Items);
     } catch (error: any) {
       console.log(error);
       updateNotification({
@@ -41,9 +45,10 @@ const Bin = () => {
     <>
       <SectionHeader sectionType={BIN} allowUploading={false} title={"Bin"} />
 
+      {props.showFiles &&
       <Box sx={{ padding: "0px 1em" }}>
         <Typography sx={{ margin: "1em 0em" }} color={"text.secondary"}>
-          Recents
+          Files
         </Typography>
 
         <Grid container spacing={1}>
@@ -53,8 +58,9 @@ const Bin = () => {
             </Grid>
           ))}
         </Grid>
-      </Box>
+      </Box>}
 
+      {props.showFolders &&
       <Box sx={{ padding: "0px 1em" }}>
         <Typography sx={{ margin: "1em 0em" }} color={"text.secondary"}>
           Folders
@@ -63,11 +69,16 @@ const Bin = () => {
         <Grid container spacing={1}>
           {folders[BIN].map((data: FolderStructureType) => (
             <Grid xs={12} md={3} xl={3}>
-              <Folder width="250px" height="50px" name={data.name}></Folder>
+              <Folder
+                width="250px"
+                height="50px"
+                sectionType={BIN}
+                data={data}
+              ></Folder>
             </Grid>
           ))}
         </Grid>
-      </Box>
+      </Box>}
     </>
   );
 };
