@@ -12,6 +12,7 @@ import { FolderStructureType } from "../../../lib/types.index";
 import { FoldersContent } from "../../../context/FolderContext";
 import SectionHeader from "../../section-header/SectionHeader";
 import { MY_DRIVE } from "../../../context/constants";
+import Skeleton from "@mui/material/Skeleton";
 
 type DashBoardSectionPropType={
   showFolders:boolean,
@@ -20,7 +21,8 @@ type DashBoardSectionPropType={
 const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
 
   const { updateNotification } = useContext(NotificationContent);
-  const {folders,setInitialFolderList} = useContext(FoldersContent)
+  const {folders,setInitialFolderList} = useContext(FoldersContent);
+  const [isFoldersLoading,setIsFoldersLoading] = useState(false)
 
 
 
@@ -31,9 +33,12 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
   
   const loadFolders=async()=>{
     try {
+      setIsFoldersLoading(true);
       const response:any = await fetchFolders();
+      setIsFoldersLoading(false);
       setInitialFolderList(MY_DRIVE, response.data.body.Items);
     } catch (error:any) {
+      setIsFoldersLoading(false);
       updateNotification({
         type: "error",
         message: error?.response?.data?.message,
@@ -51,9 +56,8 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
         allowUploading={true}
         title={"MyDrive"}
       />
-      
-      {
-        props.showFiles &&
+
+      {props.showFiles && (
         <Box sx={{ padding: "0px 1em" }}>
           <Typography sx={{ margin: "1em 0em" }} color={"text.secondary"}>
             Files
@@ -67,24 +71,44 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
             ))}
           </Grid>
         </Box>
-      }
+      )}
 
-      {
-        props.showFolders &&
+      {props.showFolders && (
         <Box sx={{ padding: "0px 1em" }}>
           <Typography sx={{ margin: "1em 0em" }} color={"text.secondary"}>
             Folders
           </Typography>
-
-          <Grid container spacing={1}>
-            {folders[MY_DRIVE].map((data: FolderStructureType) => (
-              <Grid xs={12} md={3} xl={3} key={data.id}>
-                <Folder width="250px" height="50px" sectionType={MY_DRIVE} data={data}></Folder>
+          {isFoldersLoading ? (
+            <Grid container spacing={1}>
+              <Grid xs={12} md={3} xl={3}>
+                <Skeleton animation="wave" variant="rectangular" height={50} />
               </Grid>
-            ))}
-          </Grid>
-        </Box>    
-      }
+              <Grid xs={12} md={3} xl={3}>
+                <Skeleton animation="wave" variant="rectangular" height={50} />
+              </Grid>
+              <Grid xs={12} md={3} xl={3}>
+                <Skeleton animation="wave" variant="rectangular" height={50} />
+              </Grid>
+              <Grid xs={12} md={3} xl={3}>
+                <Skeleton animation="wave"  variant="rectangular" height={50} />
+              </Grid>
+            </Grid>
+          ) : (
+            <Grid container spacing={1}>
+              {folders[MY_DRIVE].map((data: FolderStructureType) => (
+                <Grid xs={12} md={3} xl={3} key={data.id}>
+                  <Folder
+                    width="250px"
+                    height="50px"
+                    sectionType={MY_DRIVE}
+                    data={data}
+                  ></Folder>
+                </Grid>
+              ))}
+            </Grid>
+          )}
+        </Box>
+      )}
     </>
   );
 };

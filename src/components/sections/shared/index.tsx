@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Skeleton, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 
 import Folder from "../../folders/Folder";
@@ -20,6 +20,7 @@ type DashBoardSectionPropType = {
 const Shared:React.FC<DashBoardSectionPropType> = (props) => {
   const { updateNotification } = useContext(NotificationContent);
   const { folders, setInitialFolderList } = useContext(FoldersContent);
+  const [isFoldersLoading,setIsFoldersLoading] = useState(false)
 
   const assets = [
     { type: "pdf", name: "demo" },
@@ -28,11 +29,12 @@ const Shared:React.FC<DashBoardSectionPropType> = (props) => {
 
   const loadFolders = async () => {
     try {
+      setIsFoldersLoading(true)
       const response: any = await fetchFolders();
-      console.log(response.data);
+      setIsFoldersLoading(false);
       setInitialFolderList(SHARED, response.data.body.Items);
     } catch (error: any) {
-      console.log(error);
+      setIsFoldersLoading(false);
       updateNotification({
         type: "error",
         message: error?.response?.data?.message,
@@ -71,6 +73,22 @@ const Shared:React.FC<DashBoardSectionPropType> = (props) => {
           Folders
         </Typography>
 
+         {isFoldersLoading ? (
+            <Grid container spacing={1}>
+              <Grid xs={12} md={3} xl={3}>
+                <Skeleton animation="wave" variant="rectangular" height={50} />
+              </Grid>
+              <Grid xs={12} md={3} xl={3}>
+                <Skeleton animation="wave" variant="rectangular" height={50} />
+              </Grid>
+              <Grid xs={12} md={3} xl={3}>
+                <Skeleton animation="wave" variant="rectangular" height={50} />
+              </Grid>
+              <Grid xs={12} md={3} xl={3}>
+                <Skeleton animation="wave"  variant="rectangular" height={50} />
+              </Grid>
+            </Grid>
+          ) : (
         <Grid container spacing={1}>
           {folders[SHARED].map((data: FolderStructureType) => (
             <Grid xs={12} md={3} xl={3}>
@@ -82,7 +100,7 @@ const Shared:React.FC<DashBoardSectionPropType> = (props) => {
               ></Folder>
             </Grid>
           ))}
-        </Grid>
+        </Grid>)}
       </Box>
     }
     </>
