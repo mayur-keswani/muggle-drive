@@ -14,7 +14,6 @@ type FolderType = {
 };
 export default function Folder({ data,sectionType, width, height }: FolderType) {
   const navigate =useNavigate();
-  console.log(data)
   return (
     <Box
       sx={{

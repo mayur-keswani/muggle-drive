@@ -18,7 +18,8 @@ import { SectionType } from "../../lib/types.index";
 type SectionHeaderPropType={
     sectionType:SectionType,
     title:string,
-    allowUploading:boolean
+    allowUploading:boolean,
+    parentRef:string
 }
 const SectionHeader:React.FC<SectionHeaderPropType> = (props) => {
 
@@ -31,6 +32,7 @@ const SectionHeader:React.FC<SectionHeaderPropType> = (props) => {
     <Box sx={{margin:'1rem'}}>
       <CreateFolder
         sectionType={props.sectionType}
+        parentRef={props.parentRef}
         isOpen={showCreateFolderModal}
         closeModal={() => {
           setShowCreateForderModal(false);

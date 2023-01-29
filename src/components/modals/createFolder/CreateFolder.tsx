@@ -27,29 +27,37 @@ const style = {
 
 type CreateFolderType={
     sectionType:SectionType,
+    parentRef:string,
     isOpen:boolean,
     closeModal:any
 }
 
-export default function CreateFolder({sectionType,isOpen,closeModal}:CreateFolderType) {
-  const [name,setName] = React.useState('')
-  const {updateNotification}=useContext(NotificationContent)
-  const {addFolder} = useContext(FoldersContent)
-  
-  const onSubmit=async()=>{
-    try{
-      const response =await  createFolder({name,parentRef:'0'});
-      addFolder(sectionType,response.data.body)
+export default function CreateFolder({
+  sectionType,
+  parentRef,
+  isOpen,
+  closeModal,
+}: CreateFolderType) {
+  const [name, setName] = React.useState("");
+  const { updateNotification } = useContext(NotificationContent);
+  const { addFolder } = useContext(FoldersContent);
+
+  const onSubmit = async () => {
+    try {
+      const response = await createFolder({ name, parentRef});
+      addFolder(sectionType, response.data.body);
       updateNotification({
         type: "success",
-        message: 'Folder Created!',
+        message: "Folder Created!",
       });
-      closeModal()
-      
-    }catch(error:any){
-      updateNotification({type:'error',message:error.response?.data?.message})
+      closeModal();
+    } catch (error: any) {
+      updateNotification({
+        type: "error",
+        message: error.response?.data?.message,
+      });
     }
-  }
+  };
   return (
     <div>
       <Modal
@@ -65,7 +73,16 @@ export default function CreateFolder({sectionType,isOpen,closeModal}:CreateFolde
       >
         <Fade in={isOpen}>
           <Box sx={style}>
-            <Box sx={{display:'flex', justifyContent: "flex-end", alignItems: "center",padding:"0",margin:'0' }} onClick={closeModal}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                padding: "0",
+                margin: "0",
+              }}
+              onClick={closeModal}
+            >
               <CloseIcon />
             </Box>
             <Typography id="transition-modal-title" variant="h6">
@@ -76,14 +93,16 @@ export default function CreateFolder({sectionType,isOpen,closeModal}:CreateFolde
               id="outlined-required"
               label="name"
               value={name}
-              onChange={(e)=>{setName(e.target.value)}}
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
               sx={{ width: "100%", margin: "1em 0em" }}
             />
             <Button
               sx={{ width: "100%" }}
               variant="contained"
               size="medium"
-                onClick={onSubmit}
+              onClick={onSubmit}
             >
               Create
             </Button>
