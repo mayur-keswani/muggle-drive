@@ -11,37 +11,17 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
 import { MenuItem, MenuList, Typography } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
+import { BIN, COMPUTER, MY_DRIVE, RECENT, SHARED, STARRED } from "../../context/constants";
 
 const MenuDrawer = () => {
-  const [selectMenu, setSelectMenu] = useState("drive");
-  const { path } = useParams();
+  const { sectionType } = useParams();
   const Navigate = useNavigate();
 
-  useEffect(() => {
-    console.log(path)
-    if (path) {
-      if (path === "my-drive") {
-        setSelectMenu("drive");
-      } else if (path === "starred") {
-        setSelectMenu("starred");
-      } else if (path === "bin") {
-        setSelectMenu("bin");
-      } else if (path === "recent") {
-        setSelectMenu("recent");
-      } else if (path === "computers") {
-        setSelectMenu("computers");
-      } else if (path === "sharred") {
-        setSelectMenu("sharred");
-      }
-    }
-  }, [path]);
   return (
     <div>
-      <MenuList
-       
-      >
+      <MenuList>
         <MenuItem
-          selected={selectMenu === "drive"}
+          selected={sectionType === MY_DRIVE}
           onClick={() => {
             Navigate("/dashboard/my-drive");
           }}
@@ -53,7 +33,7 @@ const MenuDrawer = () => {
         </MenuItem>
 
         <MenuItem
-          selected={selectMenu === "computers"}
+          selected={sectionType === COMPUTER}
           onClick={() => {
             Navigate("/dashboard/computers");
           }}
@@ -65,7 +45,7 @@ const MenuDrawer = () => {
         </MenuItem>
 
         <MenuItem
-          selected={selectMenu === "recent"}
+          selected={sectionType === RECENT}
           onClick={() => {
             Navigate("/dashboard/recent");
           }}
@@ -77,7 +57,7 @@ const MenuDrawer = () => {
         </MenuItem>
 
         <MenuItem
-          selected={selectMenu === "shared"}
+          selected={sectionType === SHARED}
           onClick={() => {
             Navigate("/dashboard/shared");
           }}
@@ -89,7 +69,7 @@ const MenuDrawer = () => {
         </MenuItem>
 
         <MenuItem
-          selected={selectMenu === "starred"}
+          selected={sectionType === STARRED}
           onClick={() => {
             Navigate("/dashboard/starred");
           }}
@@ -101,7 +81,7 @@ const MenuDrawer = () => {
         </MenuItem>
 
         <MenuItem
-          selected={selectMenu === "bin"}
+          selected={sectionType === BIN}
           onClick={() => {
             Navigate("/dashboard/bin");
           }}
