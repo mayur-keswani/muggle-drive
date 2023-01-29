@@ -7,10 +7,12 @@ const EmptyState:React.FC<{message?:string}> = (props) => {
   return (
     <Box
       className="empty_state"
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center",flexDirection:'column' }}
+      sx={{ padding: "1em 1em", background: "whitesmoke" }}
     >
       {/* <SentimentVeryDissatisfiedIcon /> */}
-      <Typography color={'text.secondary'}>{props.message ?? "No Data Found!"} </Typography>
+      <Typography color={"text.secondary"}>
+        {props.message ?? "No Data Found!"}{" "}
+      </Typography>
     </Box>
   );
 }

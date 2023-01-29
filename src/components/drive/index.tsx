@@ -8,13 +8,15 @@ import Folder from "../folders/Folder";
 import Asset from "../Assets/Asset";
 import { fetchFolders } from "../../lib/lambdaApi";
 import { NotificationContent } from "../../context/NotificationContext";
-import { FolderStructureType, SectionType } from "../../lib/types.index";
+import { FileStructureType, FolderStructureType, SectionType } from "../../lib/types.index";
 import { FoldersContent } from "../../context/FolderContext";
 import SectionHeader from "../section-header/SectionHeader";
 import { BIN, COMPUTER, MY_DRIVE, RECENT, SHARED, STARRED } from "../../context/constants";
 import Skeleton from "@mui/material/Skeleton";
 import { useParams } from "react-router-dom";
 import EmptyState from "../commons/empty-state/EmptyState";
+import Divider from "@mui/material/Divider";
+import { FilesContent } from "../../context/FileContext";
 
 type DashBoardSectionPropType={
   showFolders:boolean,
@@ -22,18 +24,18 @@ type DashBoardSectionPropType={
 }
 const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
 
-  const [filteredFolders,setFilteredFolders] = useState<FolderStructureType[]>([])
-  const { sectionType,folderId } = useParams();
+  const [filteredFolders,setFilteredFolders] = useState<FolderStructureType[]>([]);
+  const [filteredFiles,setFilteredFiles] = useState<FileStructureType[]>([])
+  const [isFoldersLoading, setIsFoldersLoading] = useState(false);
+  const [isFilesLoading,setIsFilesLoading] = useState(false)
+  const [folderType, setFolderType] = useState<SectionType>(MY_DRIVE);
+
   const { updateNotification } = useContext(NotificationContent);
   const {folders,setInitialFolderList} = useContext(FoldersContent);
-  const [isFoldersLoading,setIsFoldersLoading] = useState(false)
-  const [folderType,setFolderType] = useState<SectionType>(MY_DRIVE)
+  const {files} = useContext(FilesContent)
 
+  const { sectionType, folderId } = useParams();
 
-    const assets = [
-      { type: "pdf", name: "demo" },
-      { type: "pdf", name: "demo 2" },
-    ];
   
   const loadFolders=async(type:any)=>{
     try {
@@ -71,8 +73,10 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
 
   useEffect(()=>{
     if(folderId){
+      setFilteredFiles(files[folderType].filter((file:FolderStructureType)=>file.parentRef===folderId));;
       setFilteredFolders(folders[folderType].filter((folder:FolderStructureType)=>folder.parentRef===folderId));
     }else{
+      setFilteredFiles(files[folderType])
       setFilteredFolders(folders[folderType])
     }
   },[folderId,folders[folderType].length])
@@ -92,18 +96,37 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
             Files
           </Typography>
 
-          <Grid container spacing={1}>
-            {assets.map((asset) => (
+          {isFilesLoading ? (
+            <Grid container spacing={1}>
               <Grid xs={12} md={3} xl={3}>
-                <Asset type="pdf" details={asset} />
+                <Skeleton animation="wave" variant="rectangular" height={50} />
               </Grid>
-            ))}
-          </Grid>
+              <Grid xs={12} md={3} xl={3}>
+                <Skeleton animation="wave" variant="rectangular" height={50} />
+              </Grid>
+              <Grid xs={12} md={3} xl={3}>
+                <Skeleton animation="wave" variant="rectangular" height={50} />
+              </Grid>
+              <Grid xs={12} md={3} xl={3}>
+                <Skeleton animation="wave" variant="rectangular" height={50} />
+              </Grid>
+            </Grid>
+          ) : filteredFiles.length > 0 ? (
+            <Grid container spacing={1}>
+              {filteredFiles.map((file:FileStructureType) => (
+                <Grid xs={12} md={3} xl={3}>
+                  <Asset type="pdf" details={file} />
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <EmptyState message="No Files Found!" />
+          )}
         </Box>
       )}
 
       {props.showFolders && (
-        <Box sx={{ padding: "0px 1em" }}>
+        <Box sx={{ padding: "0px 1em",margin:'2.5em 0' }}>
           <Typography sx={{ margin: "1em 0em" }} color={"text.secondary"}>
             Folders
           </Typography>
@@ -122,22 +145,21 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
                 <Skeleton animation="wave" variant="rectangular" height={50} />
               </Grid>
             </Grid>
+          ) : filteredFolders.length > 0 ? (
+            <Grid container spacing={1}>
+              {filteredFolders.map((data: FolderStructureType) => (
+                <Grid xs={12} md={3} xl={3} key={data.id}>
+                  <Folder
+                    width="250px"
+                    height="50px"
+                    sectionType={MY_DRIVE}
+                    data={data}
+                  ></Folder>
+                </Grid>
+              ))}
+            </Grid>
           ) : (
-            filteredFolders.length>0?
-              <Grid container spacing={1}>
-                {filteredFolders.map((data: FolderStructureType) => (
-                  <Grid xs={12} md={3} xl={3} key={data.id}>
-                    <Folder
-                      width="250px"
-                      height="50px"
-                      sectionType={MY_DRIVE}
-                      data={data}
-                    ></Folder>
-                  </Grid>
-                ))}
-              </Grid>
-            :
-            <EmptyState message="No Folders Found!"/>
+            <EmptyState message="No Folders Found!" />
           )}
         </Box>
       )}

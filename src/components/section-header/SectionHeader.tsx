@@ -29,7 +29,7 @@ const SectionHeader:React.FC<SectionHeaderPropType> = (props) => {
     React.useState(false);
   const [showUploadAssetsModal, setShowUploadAssetsModal] = useState(false);
   return (
-    <Box sx={{margin:'1rem'}}>
+    <Box sx={{ margin: "1rem" }}>
       <CreateFolder
         sectionType={props.sectionType}
         parentRef={props.parentRef}
@@ -47,11 +47,13 @@ const SectionHeader:React.FC<SectionHeaderPropType> = (props) => {
 
       <Typography
         variant="h5"
-        sx={{ margin: "1em 0em" }}
+        
         color={"text.secondary"}
       >
         {props.title}
       </Typography>
+      <Divider variant="fullWidth" sx={{opacity:'0.7'}} />
+
       {props.allowUploading && (
         <Button
           variant="outlined"
@@ -60,7 +62,7 @@ const SectionHeader:React.FC<SectionHeaderPropType> = (props) => {
           sx={{
             borderRedius: "40px",
             color: "#252525",
-            // margin: "1rem",
+            margin: "1em 0em",
             backgroundColor: "#f1f3f4",
           }}
           onClick={(e: any) => {
