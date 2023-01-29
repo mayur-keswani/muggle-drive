@@ -15,6 +15,7 @@ import { userPool } from "../../utils/UserPool";
 import { UserContext } from "../../context/UserContext";
 import { NotificationContent } from "../../context/NotificationContext";
 import {LoadingButton} from "@mui/lab";
+import { MY_DRIVE } from "../../context/constants";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -92,7 +93,7 @@ const Login = () => {
         updateNotification({type:"success",message:'Login Successfull'});
         if(result.isValid()){
 
-            navigate("/dashboard");
+            navigate(`/dashboard/${MY_DRIVE}`);
         }else{
           navigate('/verify')
         }
