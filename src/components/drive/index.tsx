@@ -76,8 +76,8 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
       setFilteredFiles(files[folderType].filter((file:FolderStructureType)=>file.parentRef===folderId));;
       setFilteredFolders(folders[folderType].filter((folder:FolderStructureType)=>folder.parentRef===folderId));
     }else{
-      setFilteredFiles(files[folderType])
-      setFilteredFolders(folders[folderType])
+      setFilteredFiles(files[folderType].filter((file:FolderStructureType)=>file.parentRef==='0'))
+      setFilteredFolders(folders[folderType].filter((folder:FolderStructureType)=>folder.parentRef==='0'))
     }
   },[folderId,folders[folderType].length])
 
