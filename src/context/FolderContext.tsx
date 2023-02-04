@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FolderStructureType, SectionType } from "../lib/types.index";
+import { BIN, MY_DRIVE } from "./constants";
 
 export const FoldersContent = React.createContext<{
   folders: Record<SectionType, any[]>;
@@ -9,6 +10,7 @@ export const FoldersContent = React.createContext<{
   ) => void;
   addFolder: (type: SectionType, payload: FolderStructureType) => void;
   removeFolder: (type: SectionType, id: string) => void;
+  recoverFolder: (type: SectionType, id: string) => void;
   updateFolder: (type: SectionType, payload: FolderStructureType) => void;
 }>({
   folders: {
@@ -22,6 +24,7 @@ export const FoldersContent = React.createContext<{
   setInitialFolderList: () => {},
   addFolder: () => {},
   removeFolder: () => {},
+  recoverFolder: () => {},
   updateFolder: () => {},
 });
 
@@ -39,14 +42,40 @@ const FoldersProvider = (props: any) => {
 
     setFolders((prevValues) => ({ ...prevValues, [type]: upldatedList }));
   };
+
   const removeFolder = (type:SectionType,id:string) => {
     let existingList = folders[type];
-    let updatedList = existingList.filter((folder: FolderStructureType) => folder.id !== id)
+    let deletingFolder = existingList.find((folder) => folder.id === id);
+    let updatedList = existingList.filter(
+      (folder: FolderStructureType) => folder.id !== id
+    );
+
+    console.log(updatedList,'types',type)
     
     setFolders((prevValues) => ({
       ...prevValues,
-      type: updatedList,
+      [BIN]: deletingFolder
+        ? prevValues[BIN].concat(deletingFolder)
+        : prevValues[BIN],
+      [type]: updatedList,
     }));
+    
+  };
+
+  const recoverFolder = (type: SectionType, id: string) => {
+      let existingList = folders[type];
+      let recoveringFolder = existingList.find((folder) => folder.id === id);
+      let updatedList = existingList.filter(
+        (folder: FolderStructureType) => folder.id !== id
+      );
+
+      setFolders((prevValues) => ({
+        ...prevValues,
+        [MY_DRIVE]: recoveringFolder
+          ? prevValues[MY_DRIVE].concat(recoveringFolder)
+          : prevValues[MY_DRIVE],
+        type: updatedList,
+      }));
   };
 
   const updateFolder = (type: SectionType, payload: FolderStructureType) => {
@@ -70,6 +99,7 @@ const FoldersProvider = (props: any) => {
         setInitialFolderList,
         addFolder,
         removeFolder,
+        recoverFolder,
         updateFolder,
       }}
     >

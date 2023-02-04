@@ -12,3 +12,25 @@ export const fetchFolders=(type:SectionType = MY_DRIVE )=>{
 export const createFolder = async (payload:{name:string,parentRef:string}) => {
   return await axios.post(config.apiEndpoint + "/folders",payload);
 };
+
+export const deleteFolderAPI = async (id:string) => {
+  return await axios.delete(config.apiEndpoint + "/folders",{
+    params:{
+      id
+    }
+  });
+};
+
+export const recoverFolderAPI = async (id: string) => {
+  return await axios.delete(
+    config.apiEndpoint + "/folders",
+    {
+      params: {
+        id,
+      },
+      data: {
+        mode: "recover",
+      },
+    }
+  );
+};

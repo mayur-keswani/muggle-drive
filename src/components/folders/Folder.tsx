@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState, useContext } from "react";
 import Box from "@mui/material/Box";
 import FolderIcon from "@mui/icons-material/Folder";
 import './Folder.css'
@@ -11,9 +11,15 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
+import AutorenewIcon from "@mui/icons-material/Autorenew";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
+import ConfirmDialog from "../commons/confirm-dialog/ConfirmDialog";
+import { deleteFolderAPI, recoverFolderAPI } from "../../lib/lambdaApi";
+import { FoldersContent } from "../../context/FolderContext";
+import { BIN } from "../../context/constants";
+import { NotificationContent } from "../../context/NotificationContext";
 
 type FolderType = {
   data: FolderStructureType;
@@ -22,8 +28,39 @@ type FolderType = {
   height: string;
 };
 export default function Folder({ data,sectionType, width, height }: FolderType) {
+  const {removeFolder,recoverFolder}=useContext(FoldersContent)
+  const {updateNotification} =useContext(NotificationContent)
   const [showOptions, setShowOptions] = useState<null | HTMLElement>(null);
+  const [showDeleteConfirmDialog,setShowDeleteConfirmDialog] = useState(false)
   const navigate =useNavigate();
+
+  const onDelete=async(id:string)=>{
+    try{
+      const response=await deleteFolderAPI(id);
+      console.log(response)
+      setShowDeleteConfirmDialog(false);
+      removeFolder(sectionType,id);
+      updateNotification({ type: "success", message: "Folder Deleted Successfully!" });
+
+    }catch(error){
+      console.log(error);
+      updateNotification({ type: "error", message: "Failed to Delete Folder!" });
+    }
+  }
+    const onRecover = async (id: string) => {
+      try {
+        const response = await recoverFolderAPI(id);
+        console.log(response);
+        recoverFolder(sectionType, id);
+        updateNotification({type:'success',message:'Folder Recovered!'})
+      } catch (error) {
+        console.log(error);
+        updateNotification({ type: "error", message: "Failed to Recover!" });
+
+      }
+    };
+  
+
 
   return (
     <Box
@@ -39,18 +76,32 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "1em",
+        paddingRight: "1em",
         cursor: "pointer",
       }}
       onClick={() => {
         navigate(`/dashboard/${sectionType}/folders/${data.id}`);
       }}
     >
+      <ConfirmDialog
+        handleClose={(e) => {
+          e.stopPropagation();
+          setShowDeleteConfirmDialog(false);
+        }}
+        isOpen={showDeleteConfirmDialog}
+        handleSubmit={(e: any) => {
+          e.stopPropagation();
+          onDelete(data.id);
+        }}
+        title={`Delete folder ${data.name}`}
+      />
       <Box
         sx={{
           display: "flex",
           alignItems: "center",
-          flexDirection:'row'
+          justifyContent: "flex-start",
+          flexDirection: "row",
+          width: "100%",
         }}
       >
         <FolderIcon
@@ -81,19 +132,35 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
             setShowOptions(null);
           }}
         >
-          <MenuItem onClick={() => {}}>
-            <ListItemIcon>
-              <DriveFileRenameOutlineIcon />
-            </ListItemIcon>
-            <ListItemText>Rename</ListItemText>
-          </MenuItem>
-          <Divider />
-          <MenuItem onClick={() => {}}>
-            <ListItemIcon>
-              <DeleteIcon />
-            </ListItemIcon>
-            <ListItemText>Delete</ListItemText>
-          </MenuItem>
+          {sectionType === "bin" ? (
+            <MenuItem onClick={() => {onRecover(data.id);}}>
+              <ListItemIcon>
+                <AutorenewIcon />
+              </ListItemIcon>
+              <ListItemText>Recover</ListItemText>
+            </MenuItem>
+          ) : (
+            
+              // <MenuItem onClick={() => {}}>
+              //   <ListItemIcon>
+              //     <DriveFileRenameOutlineIcon />
+              //   </ListItemIcon>
+              //   <ListItemText>Rename</ListItemText>
+              // </MenuItem>
+              //<Divider />
+              <MenuItem
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowDeleteConfirmDialog(true);
+                }}
+              >
+                <ListItemIcon>
+                  <DeleteIcon />
+                </ListItemIcon>
+                <ListItemText>Delete</ListItemText>
+              </MenuItem>
+            
+          )}
         </Menu>
       </Box>
     </Box>

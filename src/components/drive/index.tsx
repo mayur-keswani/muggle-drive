@@ -37,12 +37,12 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
   const { sectionType, folderId } = useParams();
 
   
-  const loadFolders=async(type:any)=>{
+  const loadFolders=async(type:SectionType)=>{
     try {
       setIsFoldersLoading(true);
       const response: any = await fetchFolders(type);
       setIsFoldersLoading(false);
-      setInitialFolderList(MY_DRIVE, response.data.body.Items);
+      setInitialFolderList(type, response.data.body.Items);
     } catch (error:any) {
       setIsFoldersLoading(false);
       updateNotification({
@@ -65,27 +65,43 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
   }
 
   useEffect(() => {
-    if(sectionType){
+    if(sectionType === BIN || sectionType === MY_DRIVE || sectionType===SHARED || sectionType===STARRED || sectionType === COMPUTER){
       setFolderType(getSectionType(sectionType));
       loadFolders(sectionType)
     }
   }, [sectionType]);
 
-  useEffect(()=>{
-    if(folderId){
-      setFilteredFiles(files[folderType].filter((file:FolderStructureType)=>file.parentRef===folderId));;
-      setFilteredFolders(folders[folderType].filter((folder:FolderStructureType)=>folder.parentRef===folderId));
-    }else{
-      setFilteredFiles(files[folderType].filter((file:FolderStructureType)=>file.parentRef==='0'))
-      setFilteredFolders(folders[folderType].filter((folder:FolderStructureType)=>folder.parentRef==='0'))
+  useEffect(() => {
+    if (folderId) {
+      setFilteredFiles(
+        files[folderType].filter(
+          (file: FolderStructureType) => file.parentRef === folderId
+        )
+      );
+      setFilteredFolders(
+        folders[folderType].filter(
+          (folder: FolderStructureType) => folder.parentRef === folderId
+        )
+      );
+    } else {
+      setFilteredFiles(
+        files[folderType].filter(
+          (file: FolderStructureType) => file.parentRef === "0"
+        )
+      );
+      setFilteredFolders(
+        folders[folderType].filter(
+          (folder: FolderStructureType) => folder.parentRef === "0"
+        )
+      );
     }
-  },[folderId,folders[folderType].length])
+  }, [folderId, folderType, folders[folderType].length]);
 
   return (
     <>
       <SectionHeader
         sectionType={MY_DRIVE}
-        allowUploading={true}
+        allowUploading={folderType===MY_DRIVE}
         title={folderType}
         parentRef={folderId ?? "0"}
       />
@@ -152,7 +168,7 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
                   <Folder
                     width="250px"
                     height="50px"
-                    sectionType={MY_DRIVE}
+                    sectionType={folderType}
                     data={data}
                   ></Folder>
                 </Grid>

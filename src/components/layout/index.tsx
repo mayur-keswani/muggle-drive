@@ -6,7 +6,6 @@ import Header from './header/Header';
 
 const Layout = (props:any) => {
   const {showNotification,hideNotification,notification}=useContext(NotificationContent);
-  console.log(showNotification)
   return (
     <>
       {props.showHeader && <Header />}
