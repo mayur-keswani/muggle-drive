@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Muggle Drive",
+  "name": "Clone of Google Drive (learning purpose only)",
   "icons": [
     {
       "src": "favicon.ico",

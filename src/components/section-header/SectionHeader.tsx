@@ -14,12 +14,13 @@ import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import { SectionType } from "../../lib/types.index";
+import CustBreadcrumbs from "../commons/breadcrumbs/Breadcrumbs";
 
 type SectionHeaderPropType={
     sectionType:SectionType,
     title:string,
     allowUploading:boolean,
-    parentRef:string
+    folderId:string|undefined
 }
 const SectionHeader:React.FC<SectionHeaderPropType> = (props) => {
 
@@ -32,7 +33,7 @@ const SectionHeader:React.FC<SectionHeaderPropType> = (props) => {
     <Box sx={{ margin: "1rem" }}>
       <CreateFolder
         sectionType={props.sectionType}
-        parentRef={props.parentRef}
+        parentRef={props.folderId ?? '0'}
         isOpen={showCreateFolderModal}
         closeModal={() => {
           setShowCreateForderModal(false);
@@ -45,13 +46,14 @@ const SectionHeader:React.FC<SectionHeaderPropType> = (props) => {
         }}
       />
 
-      <Typography
+      {!props.folderId && <Typography
         variant="h5"
         
         color={"text.secondary"}
       >
         {props.title}
-      </Typography>
+      </Typography>}
+      <CustBreadcrumbs folderId={props.folderId} sectionType={props.sectionType}/>
       <Divider variant="fullWidth" sx={{opacity:'0.7'}} />
 
       {props.allowUploading && (
