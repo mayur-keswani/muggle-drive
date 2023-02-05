@@ -2,65 +2,39 @@ import React, { useState } from "react";
 import { FileStructureType, SectionType } from "../lib/types.index";
 
 export const FilesContent = React.createContext<{
-  files: Record<SectionType, any[]>;
-  addFiles: (type: SectionType, payload: FileStructureType) => void;
-  removeFiles: (type: SectionType, id: string) => void;
-  updateFiles: (type: SectionType, payload: FileStructureType) => void;
+  files:FileStructureType[];
+  addFiles: (payload: FileStructureType) => void;
+  removeFiles: (id: string) => void;
+  updateFiles: (payload: FileStructureType) => void;
 }>({
-  files: {
-    'my-drive': [],
-    'computers': [],
-    'shared': [],
-    'starred': [],
-    'bin': [],
-    'recent': [],
-  },
+  files: [],
   addFiles: () => {},
   removeFiles: () => {},
   updateFiles: () => {},
 });
 
 const FilesProvider = (props: any) => {
-  const [files, setFiles] = useState<
-    Record<SectionType, FileStructureType[]>
-  >({
-    'my-drive': [],
-    'computers': [],
-    'shared': [],
-    'starred': [],
-    'bin': [],
-    'recent': [],
-  });
+  const [files, setFiles] = useState<FileStructureType[]>([]);
 
-  const addFiles = (type: SectionType, payload: FileStructureType) => {
-    let upldatedList = files[type].concat(payload);
-
-    setFiles((prevValues) => ({ ...prevValues, [type]: upldatedList }));
+  const addFiles = (payload: FileStructureType) => {
+    let upldatedList = files.concat(payload);
+    setFiles(upldatedList);
   };
-  const removeFiles = (type: SectionType, id: string) => {
-    let existingList = files[type];
-    let updatedList = existingList.filter(
-      (Files: FileStructureType) => Files.id !== id
+
+
+  const removeFiles = (id: string) => {
+     let updatedList = files.map((file: FileStructureType) =>
+       file.id === id ? { ...file, isDeleted: true } : file
+     );
+     setFiles([...updatedList]);
+  };
+
+
+  const updateFiles = (payload: FileStructureType) => {
+    let updatedList = files.map((file: FileStructureType) =>
+      file.id === payload.id ? { ...file, ...payload } : file
     );
-
-    setFiles((prevValues) => ({
-      ...prevValues,
-      type: updatedList,
-    }));
-  };
-
-  const updateFiles = (type: SectionType, payload: FileStructureType) => {
-    let existingList = files[type];
-
-    let updatedList = existingList.map((Files: FileStructureType) => {
-      if (Files.id === payload.id) return { ...payload };
-      else return Files;
-    });
-
-    setFiles((prevValues) => ({
-      ...prevValues,
-      [type]: updatedList,
-    }));
+    setFiles(updatedList);
   };
   return (
     <FilesContent.Provider

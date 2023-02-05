@@ -3,24 +3,16 @@ import { FolderStructureType, SectionType } from "../lib/types.index";
 import { BIN, MY_DRIVE } from "./constants";
 
 export const FoldersContent = React.createContext<{
-  folders: Record<SectionType, any[]>;
+  folders: FolderStructureType[];
   setInitialFolderList: (
-    type: SectionType,
     payload: FolderStructureType[]
   ) => void;
-  addFolder: (type: SectionType, payload: FolderStructureType) => void;
-  removeFolder: (type: SectionType, id: string) => void;
-  recoverFolder: (type: SectionType, id: string) => void;
-  updateFolder: (type: SectionType, payload: FolderStructureType) => void;
+  addFolder: (payload: FolderStructureType) => void;
+  removeFolder: (id: string) => void;
+  recoverFolder: (id: string) => void;
+  updateFolder: (payload: FolderStructureType) => void;
 }>({
-  folders: {
-    "my-drive": [],
-    computers: [],
-    shared: [],
-    starred: [],
-    bin: [],
-    recent: [],
-  },
+  folders: [],
   setInitialFolderList: () => {},
   addFolder: () => {},
   removeFolder: () => {},
@@ -29,69 +21,46 @@ export const FoldersContent = React.createContext<{
 });
 
 const FoldersProvider = (props: any) => {
-  const [folders, setFolders] = useState<
-    Record<SectionType, FolderStructureType[]>
-  >({ "my-drive": [], "computers": [], "shared": [], "starred": [], "bin": [], "recent":[] });
+  const [folders, setFolders] = useState<FolderStructureType[]>([]);
  
-  const setInitialFolderList=(type:SectionType,payload:FolderStructureType[])=>{
-    setFolders((prevValues)=>({...prevValues,[type]:payload}))
+  const setInitialFolderList=(payload:FolderStructureType[])=>{
+    setFolders(payload);
   }
 
-  const addFolder = (type: SectionType, payload: FolderStructureType) => {
-    let upldatedList = folders[type].concat(payload)
 
-    setFolders((prevValues) => ({ ...prevValues, [type]: upldatedList }));
+  const addFolder = (payload: FolderStructureType) => {
+    let upldatedList = folders.concat(payload)
+
+    setFolders(upldatedList);
   };
 
-  const removeFolder = (type:SectionType,id:string) => {
-    let existingList = folders[type];
-    let deletingFolder = existingList.find((folder) => folder.id === id);
-    let updatedList = existingList.filter(
-      (folder: FolderStructureType) => folder.id !== id
+
+  const removeFolder = (id:string) => {
+    let updatedList = folders.map(
+      (folder: FolderStructureType) => ((folder.id === id)?{...folder,isDeleted:true}:folder)
     );
-
-    console.log(updatedList,'types',type)
-    
-    setFolders((prevValues) => ({
-      ...prevValues,
-      [BIN]: deletingFolder
-        ? prevValues[BIN].concat(deletingFolder)
-        : prevValues[BIN],
-      [type]: updatedList,
-    }));
-    
+    setFolders([...updatedList]);
   };
 
-  const recoverFolder = (type: SectionType, id: string) => {
-      let existingList = folders[type];
-      let recoveringFolder = existingList.find((folder) => folder.id === id);
-      let updatedList = existingList.filter(
-        (folder: FolderStructureType) => folder.id !== id
+
+
+  const recoverFolder = (id: string) => {
+      let updatedList = folders.map((folder: FolderStructureType) =>
+        folder.id === id ? { ...folder, isDeleted: false } : folder
       );
 
-      setFolders((prevValues) => ({
-        ...prevValues,
-        [MY_DRIVE]: recoveringFolder
-          ? prevValues[MY_DRIVE].concat(recoveringFolder)
-          : prevValues[MY_DRIVE],
-        type: updatedList,
-      }));
+      setFolders([...updatedList]);
   };
 
-  const updateFolder = (type: SectionType, payload: FolderStructureType) => {
-    let existingList = folders[type];
 
-    let updatedList=existingList.map((folder: FolderStructureType) => {
-        if (folder.id === payload.id) return { ...payload };
-        else return folder;
-    });
 
-    setFolders((prevValues) => ({
-      ...prevValues,
-      [type]: updatedList,
-    }));
-    
+  const updateFolder = (payload: FolderStructureType) => {
+    let updatedList = folders.map((folder: FolderStructureType) =>
+      folder.id === payload.id ? { ...folder, ...payload } : folder
+    );
+    setFolders(updatedList);
   };
+
   return (
     <FoldersContent.Provider
       value={{

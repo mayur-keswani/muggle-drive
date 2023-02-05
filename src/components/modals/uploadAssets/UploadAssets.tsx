@@ -53,7 +53,7 @@ export default function UploadAssets({ isOpen, closeModal }: CreateFolderType) {
           url={croppingImage.url}
           onSubmit={async(croppedUrl: string) => {
             let blob = await fetch(croppedUrl).then((r) => r.blob());
-            console.log("croppedURL", blob);
+            // console.log("croppedURL", blob);
 
             console.log('acceptedFiled',acceptedFiles)
             let temp = acceptedFiles.map(file=>(file.id===croppingImage.id)?{...file,blob}:file);

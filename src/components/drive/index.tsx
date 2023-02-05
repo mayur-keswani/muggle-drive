@@ -37,12 +37,12 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
   const { sectionType, folderId } = useParams();
 
   
-  const loadFolders=async(type:SectionType)=>{
+  const loadFolders=async()=>{
     try {
       setIsFoldersLoading(true);
-      const response: any = await fetchFolders(type);
+      const response: any = await fetchFolders();
       setIsFoldersLoading(false);
-      setInitialFolderList(type, response.data.body.Items);
+      setInitialFolderList(response.data.body.Items);
     } catch (error:any) {
       setIsFoldersLoading(false);
       updateNotification({
@@ -64,38 +64,63 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
    } 
   }
 
+  // const getParentDeletedFolder=(deletedfolders:FolderStructureType[])=>{
+  //   const RootFolder = deletedfolders.filter(folder=>folder.parentRef === '0');
+  //   if (RootFolder.length > 0) {
+  //     return RootFolder;
+  //   }else{
+  //     let foldersWithNoParent = []
+  //     deletedfolders.map(delFolder=>{
+  //       let parentRef = delFolder.parentRef;
+  //       deletedfolders.map(fol=>fol.id === parentRef)
+  //     })
+  //   }
+  // }
+
+  const getFilderedFolder =(sectionType:SectionType,folderList:FolderStructureType[],parentRef:string = '0')=>{
+    if(sectionType === MY_DRIVE){
+      return folderList.filter(
+        (folder: FolderStructureType) =>
+          folder.parentRef === parentRef &&
+          !folder.isDeleted &&
+          !folder.isShared &&
+          !folder.isStarred
+      );
+    }
+    if(sectionType === BIN){
+      if(parentRef !== '0'){
+         return folderList.filter(
+           (folder: FolderStructureType) =>
+             folder.parentRef === parentRef
+         );
+      }
+      return folderList.filter(
+        (folder: FolderStructureType) =>
+          folder.isDeleted 
+      );
+    }
+    else{
+      return []
+    }
+  }
+
+  useEffect(()=>{
+    loadFolders()
+  },[])
+
   useEffect(() => {
     if(sectionType === BIN || sectionType === MY_DRIVE || sectionType===SHARED || sectionType===STARRED || sectionType === COMPUTER){
       setFolderType(getSectionType(sectionType));
-      loadFolders(sectionType)
     }
   }, [sectionType]);
+  
 
   useEffect(() => {
-    if (folderId) {
-      setFilteredFiles(
-        files[folderType].filter(
-          (file: FolderStructureType) => file.parentRef === folderId
-        )
-      );
-      setFilteredFolders(
-        folders[folderType].filter(
-          (folder: FolderStructureType) => folder.parentRef === folderId
-        )
-      );
-    } else {
-      setFilteredFiles(
-        files[folderType].filter(
-          (file: FolderStructureType) => file.parentRef === "0"
-        )
-      );
-      setFilteredFolders(
-        folders[folderType].filter(
-          (folder: FolderStructureType) => folder.parentRef === "0"
-        )
-      );
-    }
-  }, [folderId, folderType, folders[folderType].length]);
+    setFilteredFiles(
+      files.filter((file: FolderStructureType) => file.parentRef === "0")
+    );
+    setFilteredFolders(getFilderedFolder(folderType, folders, folderId ?? "0"));
+  }, [folderId, folderType, folders]);
 
   return (
     <>

@@ -45,7 +45,7 @@ export default function CreateFolder({
   const onSubmit = async () => {
     try {
       const response = await createFolder({ name, parentRef});
-      addFolder(sectionType, response.data.body);
+      addFolder(response.data.body);
       updateNotification({
         type: "success",
         message: "Folder Created!",

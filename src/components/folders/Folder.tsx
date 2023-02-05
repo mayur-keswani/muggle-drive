@@ -37,9 +37,8 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
   const onDelete=async(id:string)=>{
     try{
       const response=await deleteFolderAPI(id);
-      console.log(response)
       setShowDeleteConfirmDialog(false);
-      removeFolder(sectionType,id);
+      removeFolder(id);
       updateNotification({ type: "success", message: "Folder Deleted Successfully!" });
 
     }catch(error){
@@ -47,18 +46,18 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
       updateNotification({ type: "error", message: "Failed to Delete Folder!" });
     }
   }
-    const onRecover = async (id: string) => {
+
+  const onRecover = async (id: string) => {
       try {
         const response = await recoverFolderAPI(id);
-        console.log(response);
-        recoverFolder(sectionType, id);
+        recoverFolder(id);
         updateNotification({type:'success',message:'Folder Recovered!'})
       } catch (error) {
         console.log(error);
         updateNotification({ type: "error", message: "Failed to Recover!" });
 
       }
-    };
+  };
   
 
 
@@ -133,7 +132,7 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
           }}
         >
           {sectionType === "bin" ? (
-            <MenuItem onClick={() => {onRecover(data.id);}}>
+            <MenuItem onClick={(e) => {e.stopPropagation(); onRecover(data.id);}}>
               <ListItemIcon>
                 <AutorenewIcon />
               </ListItemIcon>
