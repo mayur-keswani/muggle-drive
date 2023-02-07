@@ -4,11 +4,9 @@ import { BIN, MY_DRIVE } from "./constants";
 
 export const FoldersContent = React.createContext<{
   folders: FolderStructureType[];
-  setInitialFolderList: (
-    payload: FolderStructureType[]
-  ) => void;
+  setInitialFolderList: (payload: FolderStructureType[]) => void;
   addFolder: (payload: FolderStructureType) => void;
-  removeFolder: (id: string) => void;
+  removeFolder: (id: string, removePermanent:boolean) => void;
   recoverFolder: (id: string) => void;
   updateFolder: (payload: FolderStructureType) => void;
 }>({
@@ -35,10 +33,19 @@ const FoldersProvider = (props: any) => {
   };
 
 
-  const removeFolder = (id:string) => {
-    let updatedList = folders.map(
-      (folder: FolderStructureType) => ((folder.id === id)?{...folder,isDeleted:true}:folder)
-    );
+  const removeFolder = (id: string, removePermanent:boolean) => {
+    let updatedList;
+    console.log(removePermanent)
+    if(removePermanent){
+    
+      updatedList = folders.filter((folder:FolderStructureType)=>folder.id !== id)
+    }
+    else{
+       updatedList = folders.map((folder: FolderStructureType) =>
+         folder.id === id ? { ...folder, isDeleted: true } : folder
+       );
+    }
+   
     setFolders([...updatedList]);
   };
 

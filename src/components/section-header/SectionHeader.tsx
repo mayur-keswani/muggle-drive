@@ -32,7 +32,6 @@ const SectionHeader:React.FC<SectionHeaderPropType> = (props) => {
   return (
     <Box sx={{ margin: "1rem" }}>
       <CreateFolder
-        sectionType={props.sectionType}
         parentRef={props.folderId ?? '0'}
         isOpen={showCreateFolderModal}
         closeModal={() => {

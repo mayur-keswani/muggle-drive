@@ -4,6 +4,7 @@ import { FoldersContent } from "../../../context/FolderContext";
 import { getFolderDetail, getFolderHistory } from "../../../lib/helper";
 import { FolderStructureType, SectionType } from "../../../lib/types.index";
 import HomeIcon from "@mui/icons-material/Home";
+import { NavLink } from "react-router-dom";
 
 const CustBreadcrumbs: React.FC<{ folderId: string | undefined,sectionType:SectionType }> = (props) => {
   const [parentList, setParentList] = useState<{name:string,id:string}[]>([]);
@@ -24,22 +25,22 @@ const CustBreadcrumbs: React.FC<{ folderId: string | undefined,sectionType:Secti
 
   return (
     <Breadcrumbs aria-label="breadcrumb" sx={{ margin: "0em 1em" }}>
-      <Link
-        underline="hover"
+      <NavLink
+        // underline="hover"
         color="inherit"
-        href={`/dashboard/${props.sectionType}`}
+        to={`/dashboard/${props.sectionType}`}
       >
         <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-      </Link>
+      </NavLink>
       {parentList.map((parent) => (
-        <Link
-          underline="hover"
+        <NavLink
+          // underline="hover"
           color="inherit"
-          href={`/dashboard/${props.sectionType}/folders/${parent.id}`}
+          to={`/dashboard/${props.sectionType}/folders/${parent.id}`}
           key={parent.id}
         >
           {parent.name}
-        </Link>
+        </NavLink>
       ))}
       {currentFolderDetail && (
         <Typography color="text.info" variant="h5">

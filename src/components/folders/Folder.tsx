@@ -20,6 +20,8 @@ import { deleteFolderAPI, recoverFolderAPI } from "../../lib/lambdaApi";
 import { FoldersContent } from "../../context/FolderContext";
 import { BIN } from "../../context/constants";
 import { NotificationContent } from "../../context/NotificationContext";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import CreateFolder from "../modals/createFolder/CreateFolder";
 
 type FolderType = {
   data: FolderStructureType;
@@ -30,7 +32,9 @@ type FolderType = {
 export default function Folder({ data,sectionType, width, height }: FolderType) {
   const {removeFolder,recoverFolder}=useContext(FoldersContent)
   const {updateNotification} =useContext(NotificationContent)
+
   const [showOptions, setShowOptions] = useState<null | HTMLElement>(null);
+  const [showRenameFolderModal,setShowRenameFolderModal] = useState(false)
   const [showDeleteConfirmDialog,setShowDeleteConfirmDialog] = useState(false)
   const navigate =useNavigate();
 
@@ -38,7 +42,7 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
     try{
       const response=await deleteFolderAPI(id);
       setShowDeleteConfirmDialog(false);
-      removeFolder(id);
+      removeFolder(id,sectionType === BIN);
       updateNotification({ type: "success", message: "Folder Deleted Successfully!" });
 
     }catch(error){
@@ -78,7 +82,9 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
         paddingRight: "1em",
         cursor: "pointer",
       }}
-      onClick={() => {
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation()
         navigate(`/dashboard/${sectionType}/folders/${data.id}`);
       }}
     >
@@ -94,6 +100,16 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
         }}
         title={`Delete folder ${data.name}`}
       />
+      <CreateFolder 
+        editFolderId={data.id} 
+        isOpen={showRenameFolderModal} parentRef={data.id} 
+        closeModal={(e:any)=>{
+          e.preventDefault();
+          e.stopPropagation(); 
+          setShowRenameFolderModal(false)
+        }}/>
+
+
       <Box
         sx={{
           display: "flex",
@@ -131,34 +147,54 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
             setShowOptions(null);
           }}
         >
-          {sectionType === "bin" ? (
-            <MenuItem onClick={(e) => {e.stopPropagation(); onRecover(data.id);}}>
+          {sectionType === "bin" && (
+            <MenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                onRecover(data.id);
+              }}
+            >
               <ListItemIcon>
                 <AutorenewIcon />
               </ListItemIcon>
               <ListItemText>Recover</ListItemText>
             </MenuItem>
-          ) : (
-            
-              // <MenuItem onClick={() => {}}>
-              //   <ListItemIcon>
-              //     <DriveFileRenameOutlineIcon />
-              //   </ListItemIcon>
-              //   <ListItemText>Rename</ListItemText>
-              // </MenuItem>
-              //<Divider />
-              <MenuItem
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowDeleteConfirmDialog(true);
-                }}
-              >
-                <ListItemIcon>
-                  <DeleteIcon />
-                </ListItemIcon>
-                <ListItemText>Delete</ListItemText>
-              </MenuItem>
-            
+          )}
+          {sectionType === "bin" && (
+            <MenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                 setShowDeleteConfirmDialog(true);
+              }}
+            >
+              <ListItemIcon>
+                <DeleteForeverIcon />
+              </ListItemIcon>
+              <ListItemText>Delete Forever</ListItemText>
+            </MenuItem>
+          )}
+
+          {sectionType !== "bin" && (
+            <MenuItem onClick={(e:any) => {e.stopPropagation(); setShowRenameFolderModal(true) }}>
+              <ListItemIcon>
+                <DriveFileRenameOutlineIcon />
+              </ListItemIcon>
+              <ListItemText>Rename</ListItemText>
+            </MenuItem>
+          )}
+
+          {sectionType !== "bin" && (
+            <MenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowDeleteConfirmDialog(true);
+              }}
+            >
+              <ListItemIcon>
+                <DeleteIcon />
+              </ListItemIcon>
+              <ListItemText>Delete</ListItemText>
+            </MenuItem>
           )}
         </Menu>
       </Box>
