@@ -11,6 +11,10 @@ export const createFolder = async (payload:{name:string,parentRef:string}) => {
   return await axios.post(config.apiEndpoint + "/folders",payload);
 };
 
+export const updateFolderAPI = async (payload: {folder:FolderStructureType}) => {
+  return await axios.post(config.apiEndpoint + "/folders", payload);
+};
+
 
 export const deleteFolderAPI = async (id:string) => {
   return await axios.delete(config.apiEndpoint + "/folders",{

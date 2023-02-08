@@ -103,9 +103,7 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
       <CreateFolder 
         editFolderId={data.id} 
         isOpen={showRenameFolderModal} parentRef={data.id} 
-        closeModal={(e:any)=>{
-          e.preventDefault();
-          e.stopPropagation(); 
+        closeModal={()=>{
           setShowRenameFolderModal(false)
         }}/>
 

@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import { TextField } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { NotificationContent } from "../../../context/NotificationContext";
-import { createFolder } from "../../../lib/lambdaApi";
+import { createFolder, updateFolderAPI } from "../../../lib/lambdaApi";
 import { FoldersContent } from "../../../context/FolderContext";
 import { SectionType } from "../../../lib/types.index";
 import { getFolderDetail } from "../../../lib/helper";
@@ -47,7 +47,8 @@ export default function CreateFolder({
   const onSubmit = async () => {
     try {
       if(props.editFolderId){
-        const response = await createFolder({ name, parentRef });
+        const existingDetail =getFolderDetail(folders,props.editFolderId)!
+        const response = await updateFolderAPI({'folder':{...existingDetail, name }});
         updateFolder(response.data.body);
         updateNotification({
           type: "success",
@@ -64,6 +65,7 @@ export default function CreateFolder({
       
       closeModal();
     } catch (error: any) {
+      console.log(error)
       updateNotification({
         type: "error",
         message: error.response?.data?.message,

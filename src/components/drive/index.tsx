@@ -155,7 +155,7 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
           ) : filteredFiles.length > 0 ? (
             <Grid container spacing={1}>
               {filteredFiles.map((file:FileStructureType) => (
-                <Grid xs={12} md={3} xl={3}>
+                <Grid xs={12} md={4} xl={3}>
                   <Asset type="pdf" details={file} />
                 </Grid>
               ))}
@@ -189,7 +189,7 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
           ) : filteredFolders.length > 0 ? (
             <Grid container spacing={1}>
               {filteredFolders.map((data: FolderStructureType) => (
-                <Grid xs={12} md={3} xl={3} key={data.id}>
+                <Grid xs={12} sm={5} md={3} xl={3} key={data.id}>
                   <Folder
                     width="250px"
                     height="50px"
