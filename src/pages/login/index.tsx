@@ -109,20 +109,20 @@ const Login = () => {
   };
   return (
     <main className="d-flex flex-column align-items-center justify-content-center h-100">
-      <Typography variant="h3" className="gradiendText">
+      <h3 className="gradiendText">
         Welcome to MuggleDrive
-      </Typography>
+      </h3>
       <Typography variant="h6" color="text.secondary">
         Clone of Google Drive
       </Typography>
 
       <Card sx={{ width: "450px", height: "auto", margin: "2em" }}>
         <div className="d-flex justify-content-center flex-column align-items-center p-2">
-          <Avatar
+          {/* <Avatar
             alt="Travis Howard"
             sx={{ width: "100px", height: "100px" }}
             src="https://images.pexels.com/photos/5774802/pexels-photo-5774802.jpeg?auto=compress&cs=tinysrgb&w=400"
-          />
+          /> */}
           {/* <div className="avatarDestription d-flex  align-items-center justify-content-center">
             <Typography color="text.secondary">John Doe</Typography>
           </div> */}

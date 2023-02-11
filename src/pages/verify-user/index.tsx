@@ -60,13 +60,11 @@ const VerifyUser = () => {
           flexDirection: "column",
         }}
       >
-        <Typography
-          variant={"h5"}
-          sx={{ margin: "1em" }}
+        <h3
           className="gradiendText"
         >
           Verify Your Account
-        </Typography>
+        </h3>
         <VerificationCodeComponent
           id=""
           type="number"

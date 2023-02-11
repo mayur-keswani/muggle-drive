@@ -62,20 +62,20 @@ const Signup = () => {
 
   return (
     <main className="d-flex flex-column align-items-center justify-content-center h-100">
-      <Typography variant="h3" className="gradiendText">
+      <h3 className="gradiendText" color="text.secondary">
         Welcome to MuggleDrive
-      </Typography>
+      </h3>
       <Typography variant="h6" color="text.secondary">
         Clone of Google Drive
       </Typography>
 
       <Card sx={{ width: "450px", height: "auto", margin: "2em" }}>
         <div className="d-flex justify-content-center flex-column align-items-center p-2">
-          <Avatar
+          {/* <Avatar
             alt="Travis Howard"
             sx={{ width: "100px", height: "100px" }}
             src="https://th.bing.com/th/id/OIP.9OLanwqz0biqN8b9QijRqwHaHV?pid=ImgDet&rs=1"
-          />
+          /> */}
         </div>
         <CardContent className="d-flex align-items-center flex-column py-1 m-0">
           <Typography gutterBottom component="div"></Typography>

@@ -1,3 +1,15 @@
-.App {
-   font-family: 'Roboto', sans-serif;
+.gradiendText{
+  /* background: var(--rainbow-gradient); */
+  /* -webkit-text-fill-color: transparent; */
+  font: 600 60px 'Poppins', sans-serif;
+  padding: 0.5em 5rem;
+  position: relative;
+}
+.gradiendText::after {
+    content: "";
+    position: absolute;
+    inset: -0.625em;
+    background: var(--rainbow-gradient);
+    filter: blur(1.7em);
+    z-index: -1;
 }
