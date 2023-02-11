@@ -54,29 +54,31 @@ const VerifyUser = () => {
     <div className="container">
       <Box
         sx={{
+          textAlign: "center",
+        }}
+      >
+        <h4 className="gradiendText">Verify Your Account</h4>
+      </Box>
+      <Box
+        sx={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           flexDirection: "column",
+          padding:'1.5em 1em'
         }}
       >
-        <h3
-          className="gradiendText"
-        >
-          Verify Your Account
-        </h3>
         <VerificationCodeComponent
           id=""
           type="number"
           fields={6}
-          fieldWidth={58}
-          fieldHeight={54}
+          fieldWidth={50}
+          fieldHeight={46}
           autoFocus={true}
           onChange={() => {}}
           onComplete={onSubmit}
         />
-        <Box
-        >
+        <Box>
           <Button onClick={reSendCode}>Resent Code</Button>
         </Box>
       </Box>

@@ -14,6 +14,7 @@ import Logout from "@mui/icons-material/Logout";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import { useNavigate } from "react-router-dom";
+import { clearLocalStorage } from "../../../../lib/localStorage";
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -26,6 +27,7 @@ export default function AccountMenu() {
     setAnchorEl(null);
   };
   const logoutHandler=()=>{
+    clearLocalStorage();
     navigate('/login')
   }
   return (

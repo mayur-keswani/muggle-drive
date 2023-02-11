@@ -135,7 +135,6 @@ export const VerificationCodeComponent: React.FC<{
 
   return (
     <div>
-      <div>
         {state.values.map((value, index) => (
           <input
             type={type === "number" ? "tel" : type}
@@ -156,7 +155,6 @@ export const VerificationCodeComponent: React.FC<{
             required={true}
           />
         ))}
-      </div>
     </div>
   );
 };

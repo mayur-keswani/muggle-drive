@@ -108,15 +108,15 @@ const Login = () => {
     });
   };
   return (
-    <main className="d-flex flex-column align-items-center justify-content-center h-100">
-      <h3 className="gradiendText">
-        Welcome to MuggleDrive
-      </h3>
-      <Typography variant="h6" color="text.secondary">
-        Clone of Google Drive
-      </Typography>
+    <main className="auth-page d-flex flex-column align-items-center justify-content-center">
+      <Box  sx={{width:'100%',textAlign:'center' ,padding:'1em 0em'}}>
+        <h4 className="gradiendText">Welcome to MuggleDrive</h4>
+        <Typography variant="h6" color="text.secondary">
+          Clone of Google Drive
+        </Typography>
+      </Box>
 
-      <Card sx={{ width: "450px", height: "auto", margin: "2em" }}>
+      <Card sx={{ width: { sm: "85%", md: "40%", xl: "30%" }, height: "auto" }}>
         <div className="d-flex justify-content-center flex-column align-items-center p-2">
           {/* <Avatar
             alt="Travis Howard"

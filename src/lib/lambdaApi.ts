@@ -7,11 +7,11 @@ export const fetchFolders=()=>{
     return axios.get(config.apiEndpoint+'/folders')
 }
 
-export const createFolder = async (payload:{name:string,parentRef:string}) => {
+export const createFolderAPI = async (payload:{name:string,parentRef:string}) => {
   return await axios.post(config.apiEndpoint + "/folders",payload);
 };
 
-export const updateFolderAPI = async (payload: {folder:FolderStructureType}) => {
+export const updateFolderAPI = async (payload: FolderStructureType) => {
   return await axios.post(config.apiEndpoint + "/folders", payload);
 };
 

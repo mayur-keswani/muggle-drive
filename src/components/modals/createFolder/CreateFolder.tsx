@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import { TextField } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { NotificationContent } from "../../../context/NotificationContext";
-import { createFolder, updateFolderAPI } from "../../../lib/lambdaApi";
+import { createFolderAPI, updateFolderAPI } from "../../../lib/lambdaApi";
 import { FoldersContent } from "../../../context/FolderContext";
 import { SectionType } from "../../../lib/types.index";
 import { getFolderDetail } from "../../../lib/helper";
@@ -48,14 +48,14 @@ export default function CreateFolder({
     try {
       if(props.editFolderId){
         const existingDetail =getFolderDetail(folders,props.editFolderId)!
-        const response = await updateFolderAPI({'folder':{...existingDetail, name }});
+        const response = await updateFolderAPI({...existingDetail, name });
         updateFolder(response.data.body);
         updateNotification({
           type: "success",
           message: "Folder Renamed!",
         });
       }else{
-        const response = await createFolder({ name, parentRef });
+        const response = await createFolderAPI({ name, parentRef });
         addFolder(response.data.body);
         updateNotification({
           type: "success",
