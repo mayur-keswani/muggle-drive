@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { getAuth } from "../lib/localStorage";
 
 type UserType = {
   username: string;
@@ -7,7 +8,7 @@ type UserType = {
   idToken: null;
   isLoggedIn: boolean;
 };
-const initialUserValue = {
+const initialUserValue = getAuth() ?? {
   username: "",
   accessToken: null,
   refreshToken: null,

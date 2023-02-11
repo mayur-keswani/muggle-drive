@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios from "./interceptors"
 import { MY_DRIVE } from "../context/constants";
 import config from "./config"
 import { FolderStructureType, SectionType } from "./types.index";
