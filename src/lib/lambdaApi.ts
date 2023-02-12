@@ -17,20 +17,12 @@ export const updateFolderAPI = async (payload: FolderStructureType) => {
 
 
 export const deleteFolderAPI = async (id:string) => {
-  return await axios.delete(config.apiEndpoint + "/folders",{
-    params:{
-      id
-    }
-  });
+  return await axios.delete(config.apiEndpoint + `/folders/${id}`);
 };
 
 export const recoverFolderAPI = async (id: string) => {
   return await axios.delete(
-    config.apiEndpoint + "/folders",
-    {
-      params: {
-        id,
-      },
+    config.apiEndpoint + `/folders/${id}`,{
       data: {
         mode: "recover",
       },
