@@ -49,7 +49,7 @@ export default function CreateFolder({
       if(props.editFolderId){
         const existingDetail =getFolderDetail(folders,props.editFolderId)!
         const response = await updateFolderAPI({...existingDetail, name });
-        updateFolder(response.data.body);
+        updateFolder(props.editFolderId,{name});
         updateNotification({
           type: "success",
           message: "Folder Renamed!",

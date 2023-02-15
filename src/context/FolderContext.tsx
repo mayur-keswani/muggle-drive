@@ -8,7 +8,7 @@ export const FoldersContent = React.createContext<{
   addFolder: (payload: FolderStructureType) => void;
   removeFolder: (id: string, removePermanent:boolean) => void;
   recoverFolder: (id: string) => void;
-  updateFolder: (payload: FolderStructureType) => void;
+  updateFolder: (id:string,payload: any) => void;
 }>({
   folders: [],
   setInitialFolderList: () => {},
@@ -61,9 +61,9 @@ const FoldersProvider = (props: any) => {
 
 
 
-  const updateFolder = (payload: FolderStructureType) => {
+  const updateFolder = (id:string,payload: any) => {
     let updatedList = folders.map((folder: FolderStructureType) =>
-      folder.id === payload.id ? { ...folder, ...payload } : folder
+      folder.id === id ? { ...folder, ...payload } : folder
     );
     setFolders(updatedList);
   };

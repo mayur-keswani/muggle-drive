@@ -16,12 +16,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import ConfirmDialog from "../commons/confirm-dialog/ConfirmDialog";
-import { deleteFolderAPI, recoverFolderAPI } from "../../lib/lambdaApi";
+import { deleteFolderAPI, recoverFolderAPI, starredFolderAPI, unStarredFolderAPI, updateFolderAPI } from "../../lib/lambdaApi";
 import { FoldersContent } from "../../context/FolderContext";
 import { BIN } from "../../context/constants";
 import { NotificationContent } from "../../context/NotificationContext";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import CreateFolder from "../modals/createFolder/CreateFolder";
+import StarsIcon from "@mui/icons-material/Stars";
+import StarIcon from "@mui/icons-material/Star";
 
 type FolderType = {
   data: FolderStructureType;
@@ -30,7 +32,7 @@ type FolderType = {
   height: string;
 };
 export default function Folder({ data,sectionType, width, height }: FolderType) {
-  const {removeFolder,recoverFolder}=useContext(FoldersContent)
+  const {removeFolder,recoverFolder,updateFolder}=useContext(FoldersContent)
   const {updateNotification} =useContext(NotificationContent)
 
   const [showOptions, setShowOptions] = useState<null | HTMLElement>(null);
@@ -63,6 +65,29 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
       }
   };
   
+  const onStarred = async (id: string) => {
+    try {
+      const response = await starredFolderAPI(id);
+      updateFolder(id,{isStarred:true});
+      updateNotification({ type: "success", message: "Folder Starred!" });
+    } catch (error) {
+      console.log(error);
+      updateNotification({ type: "error", message: "Failed to Star!" });
+    }
+  };
+
+  const onUnStarred = async (id: string) => {
+    try {
+      const response = await unStarredFolderAPI(id);
+      updateFolder(id, { isStarred: false });
+
+      updateNotification({ type: "success", message: "Folder removed successfully from starred-list!" });
+    } catch (error) {
+      console.log(error);
+      updateNotification({ type: "error", message: "Failed to remove folder from starred!" });
+    }
+  };
+
 
 
   return (
@@ -84,7 +109,7 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
       }}
       onClick={(e) => {
         e.preventDefault();
-        e.stopPropagation()
+        e.stopPropagation();
         navigate(`/dashboard/${sectionType}/folders/${data.id}`);
       }}
     >
@@ -100,13 +125,14 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
         }}
         title={`Delete folder ${data.name}`}
       />
-      <CreateFolder 
-        editFolderId={data.id} 
-        isOpen={showRenameFolderModal} parentRef={data.id} 
-        closeModal={()=>{
-          setShowRenameFolderModal(false)
-        }}/>
-
+      <CreateFolder
+        editFolderId={data.id}
+        isOpen={showRenameFolderModal}
+        parentRef={data.id}
+        closeModal={() => {
+          setShowRenameFolderModal(false);
+        }}
+      />
 
       <Box
         sx={{
@@ -117,6 +143,7 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
           width: "100%",
         }}
       >
+        {data?.isStarred && <StarsIcon fontSize="small" />}
         <FolderIcon
           style={{ color: "#3c4043", marginRight: "10px" }}
           fontSize="large"
@@ -162,7 +189,7 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
             <MenuItem
               onClick={(e) => {
                 e.stopPropagation();
-                 setShowDeleteConfirmDialog(true);
+                setShowDeleteConfirmDialog(true);
               }}
             >
               <ListItemIcon>
@@ -173,7 +200,27 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
           )}
 
           {sectionType !== "bin" && (
-            <MenuItem onClick={(e:any) => {e.stopPropagation(); setShowRenameFolderModal(true) }}>
+            <MenuItem
+              onClick={(e: any) => {
+                e.stopPropagation();
+                data.isStarred ? onUnStarred(data?.id) : onStarred(data?.id);
+              }}
+            >
+              <ListItemIcon>
+                <StarIcon />
+              </ListItemIcon>
+              <ListItemText>
+                {!data.isStarred ? "Starred" : "Remove Starred"}
+              </ListItemText>
+            </MenuItem>
+          )}
+          {sectionType !== "bin" && (
+            <MenuItem
+              onClick={(e: any) => {
+                e.stopPropagation();
+                setShowRenameFolderModal(true);
+              }}
+            >
               <ListItemIcon>
                 <DriveFileRenameOutlineIcon />
               </ListItemIcon>

@@ -83,8 +83,8 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
         (folder: FolderStructureType) =>
           folder.parentRef === parentRef &&
           !folder.isDeleted &&
-          !folder.isShared &&
-          !folder.isStarred
+          !folder.isShared 
+          // !folder.isStarred
       );
     }
     if(sectionType === BIN){
@@ -97,6 +97,14 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
       return folderList.filter(
         (folder: FolderStructureType) =>
           folder.isDeleted 
+      );
+    }
+    if(sectionType ===STARRED){
+      return folderList.filter(
+        (folder: FolderStructureType) =>
+          folder.parentRef === parentRef &&
+          folder.isStarred &&
+          !folder.isShared
       );
     }
     else{
