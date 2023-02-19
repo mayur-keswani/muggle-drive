@@ -34,6 +34,7 @@ const MenuDrawer = () => {
 
         <MenuItem
           selected={sectionType === COMPUTER}
+          disabled={true}
           onClick={() => {
             Navigate("/dashboard/computers");
           }}
@@ -46,6 +47,7 @@ const MenuDrawer = () => {
 
         <MenuItem
           selected={sectionType === RECENT}
+          disabled={true}
           onClick={() => {
             Navigate("/dashboard/recent");
           }}

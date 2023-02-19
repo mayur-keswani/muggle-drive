@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 
 
-import { Box,Button, Typography } from "@mui/material";
+import { Box,Button, Pagination, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 
 import Folder from "../folders/Folder";
@@ -134,7 +134,7 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
     <>
       <SectionHeader
         sectionType={MY_DRIVE}
-        allowUploading={folderType===MY_DRIVE}
+        allowUploading={folderType === MY_DRIVE}
         title={folderType}
         folderId={folderId}
       />
@@ -162,7 +162,7 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
             </Grid>
           ) : filteredFiles.length > 0 ? (
             <Grid container spacing={1}>
-              {filteredFiles.map((file:FileStructureType) => (
+              {filteredFiles.map((file: FileStructureType) => (
                 <Grid xs={12} md={4} xl={3}>
                   <Asset type="pdf" details={file} />
                 </Grid>
@@ -195,18 +195,18 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
               </Grid>
             </Grid>
           ) : filteredFolders.length > 0 ? (
-            <Grid container spacing={1}>
-              {filteredFolders.map((data: FolderStructureType) => (
-                <Grid xs={12} sm={5} md={3} xl={3} key={data.id}>
-                  <Folder
-                    width="250px"
-                    height="50px"
-                    sectionType={folderType}
-                    data={data}
-                  ></Folder>
-                </Grid>
-              ))}
-            </Grid>
+              <Grid container spacing={1}>
+                {filteredFolders.map((data: FolderStructureType) => (
+                    <Grid xs={12} sm={5} md={3} xl={3} key={data.id}>
+                      <Folder
+                        width="250px"
+                        height="50px"
+                        sectionType={folderType}
+                        data={data}
+                      ></Folder>
+                    </Grid>
+                ))}
+              </Grid>
           ) : (
             <EmptyState message="No Folders Found!" />
           )}
