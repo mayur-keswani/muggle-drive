@@ -43,7 +43,7 @@ const CustBreadcrumbs: React.FC<{ folderId: string | undefined,sectionType:Secti
         </NavLink>
       ))}
       {currentFolderDetail && (
-        <Typography color="text.info" variant="h5">
+        <Typography color="text.info">
           {currentFolderDetail.name}
         </Typography>
       )}
