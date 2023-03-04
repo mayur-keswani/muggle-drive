@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import Box from "@mui/material/Box";
 import FolderIcon from "@mui/icons-material/Folder";
-import './Folder.css'
 import { Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { FolderStructureType, SectionType } from "../../lib/types.index";
@@ -22,6 +21,7 @@ import { BIN } from "../../context/constants";
 import { NotificationContent } from "../../context/NotificationContext";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import CreateFolder from "../modals/createFolder/CreateFolder";
+import Card from "@mui/material/Card";
 import StarsIcon from "@mui/icons-material/Stars";
 import StarIcon from "@mui/icons-material/Star";
 
@@ -91,13 +91,13 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
 
 
   return (
-    <Box
+    <Card
       sx={{
         width,
         height,
-        backgroundColor: "#e8f0fe",
+        // backgroundColor: "#e8f0fe",
         // color: "#185abc",
-        border: "1px solid lighgray",
+        // border: "1px solid lighgray",
         "&:hover": {
           color: "#185abc !important",
         },
@@ -145,10 +145,10 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
       >
         {data?.isStarred && <StarsIcon fontSize="small" />}
         <FolderIcon
-          style={{ color: "#3c4043", marginRight: "10px" }}
-          fontSize="large"
+          style={{ marginRight: "10px" }}
+          fontSize="large" 
         />
-        <Typography sx={{ color: "#3c4043" }}>{data?.name}</Typography>
+        <Typography>{data?.name}</Typography>
       </Box>
       <Box sx={{ float: "right" }}>
         <IconButton
@@ -243,6 +243,6 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
           )}
         </Menu>
       </Box>
-    </Box>
+    </Card>
   );
 }
