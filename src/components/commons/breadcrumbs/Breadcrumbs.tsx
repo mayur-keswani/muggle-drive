@@ -1,4 +1,4 @@
-import { Breadcrumbs, Link, Typography } from "@mui/material";
+import { Breadcrumbs, Typography } from "@mui/material";
 import React, { useState, useEffect, useContext } from "react";
 import { FoldersContent } from "../../../context/FolderContext";
 import { getFolderDetail, getFolderHistory } from "../../../lib/helper";
@@ -24,7 +24,7 @@ const CustBreadcrumbs: React.FC<{ folderId: string | undefined,sectionType:Secti
 
 
   return (
-    <Breadcrumbs aria-label="breadcrumb" sx={{ margin: "0em 1em" }}>
+    <Breadcrumbs aria-label="breadcrumb">
       <NavLink
         // underline="hover"
         color="inherit"

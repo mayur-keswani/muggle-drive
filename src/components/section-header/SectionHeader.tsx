@@ -62,9 +62,7 @@ const SectionHeader:React.FC<SectionHeaderPropType> = (props) => {
           startIcon={<AddOutlinedIcon color="primary" />}
           sx={{
             borderRedius: "40px",
-            color: "#252525",
             margin: "1em 0em",
-            backgroundColor: "#f1f3f4",
           }}
           onClick={(e: any) => {
             setShowUploadingOption(e.target);

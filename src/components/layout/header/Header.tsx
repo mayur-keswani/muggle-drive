@@ -5,10 +5,6 @@ import AccountMenu from "./account-menu";
 import { styled, useTheme, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
-import AppBar from "@mui/material/AppBar";
-import Container from "@mui/material/Container";
-import Toolbar from "@mui/material/Toolbar";
-import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -16,11 +12,12 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import "./Header.css";
 import { Drawer } from "@mui/material";
 import MenuDrawer from "../../menu-drawer";
-
-const Header = () => {
+import ThemeChanger from "./ThemeChanger";
+const Header:React.FC = () => {
 
   const [isSideMenuOpen, setIsSideMenuOpen] =useState(false);
   const theme = useTheme();
+
   const DrawerHeader = styled("div")(({ theme }) => ({
     display: "flex",
     alignItems: "center",
@@ -30,12 +27,9 @@ const Header = () => {
     justifyContent: "flex-end",
   }));
 
-  
-
   const Search = styled("div")(({ theme }) => ({
     position: "relative",
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: "#f1f3f4",
     "&:hover": {
       backgroundColor: alpha(theme.palette.common.black, 0.1),
     },
@@ -76,6 +70,7 @@ const Header = () => {
       },
     },
   }));
+  
   return (
     <Grid container className="header">
       <Grid
@@ -105,6 +100,7 @@ const Header = () => {
           }}
         >
           <DrawerHeader>
+            <ThemeChanger/>
             <IconButton
               onClick={() => {
                 setIsSideMenuOpen(false);

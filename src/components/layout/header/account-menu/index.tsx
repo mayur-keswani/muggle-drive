@@ -6,19 +6,18 @@ import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import { useNavigate } from "react-router-dom";
 import { clearLocalStorage } from "../../../../lib/localStorage";
+import ThemeChanger from "../ThemeChanger";
+
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -26,21 +25,18 @@ export default function AccountMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const logoutHandler=()=>{
+  const logoutHandler = () => {
     clearLocalStorage();
-    navigate('/login')
-  }
+    navigate("/login");
+  };
+  
   return (
     <React.Fragment>
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
-        <Box sx={{ display: { xs: "none", md: "flex" } }}>
-          <Typography sx={{ minWidth: 50 }}>
-            <HelpOutlineOutlinedIcon />
-          </Typography>
-          <Typography sx={{ minWidth: 50 }}>
-            <SettingsOutlinedIcon />
-          </Typography>
-        </Box>
+        <ThemeChanger
+          styles={{ display: { xs: "none", md: "flex" } }}
+        />
+
         <Tooltip title="Account settings">
           <IconButton
             onClick={handleClick}
