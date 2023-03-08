@@ -11,6 +11,7 @@ import CropIcon from "@mui/icons-material/Crop";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import CropImageModal from "../cropImage/CropImageModal";
 import {nanoid} from 'nanoid'
+import { getSignedURLAPI, uploadAssetsAPI } from "../../../lib/lambdaApi";
 
 const style = {
   position: "absolute",
@@ -28,39 +29,64 @@ type CreateFolderType = {
   isOpen: boolean;
   closeModal: any;
 };
-type FileObjectType={
-  path: string,
-  lastModified: number,
-  lastModifiedDate: string,
+type UploadAssetType={
+  id: string,
+  blob:any,
+  name:string,
   size: number,
   type: string
 }
 export default function UploadAssets({ isOpen, closeModal }: CreateFolderType) {
 
-  const [acceptedFiles,setAcceptedFiles] = useState<any[]>([]);
+  const [acceptedFiles, setAcceptedFiles] = useState<UploadAssetType[]>([]);
 
   const [croppingImage,setCroppingImage] = useState({
     url:'',
-    id:null
+    id:''
   })
   const [showCropImageModal,setShowCropImageModal]=useState(false)
 
+
+  const uploadAssetsHandler = async (file: UploadAssetType) => {
+    try{
+      const {data:{body:signedURL}} = await getSignedURLAPI({
+        fileName: file.name,
+        fileType: 'multipart/form-data',
+      });
+      const resp=await uploadAssetsAPI(signedURL,file.blob);
+
+      console.log(resp);
+      closeModal()
+    }catch(error){
+      console.log(error)
+    }
+    
+  }
+  const onSubmitHandler = async(acceptedFiles:any[])=>{
+    try{
+      for (const iterator of acceptedFiles) {
+        await uploadAssetsHandler(iterator)
+      }
+    }catch(error){
+      console.log(error)
+    }
+  }
   return (
     <div>
       {showCropImageModal && (
         <CropImageModal
           isOpen={showCropImageModal}
           url={croppingImage.url}
-          onSubmit={async(croppedUrl: string) => {
+          onSubmit={async (croppedUrl: string) => {
             let blob = await fetch(croppedUrl).then((r) => r.blob());
             // console.log("croppedURL", blob);
 
-            console.log('acceptedFiled',acceptedFiles)
-            let temp = acceptedFiles.map(file=>(file.id===croppingImage.id)?{...file,blob}:file);
-            
-            setAcceptedFiles(temp)
-            setShowCropImageModal(false)
+            let temp = acceptedFiles.map((file) =>
+              file.id === croppingImage.id ? { ...file, blob } : file
+            );
 
+            setAcceptedFiles(temp);
+            setShowCropImageModal(false);
           }}
           closeModal={() => {
             setShowCropImageModal(false);
@@ -98,12 +124,13 @@ export default function UploadAssets({ isOpen, closeModal }: CreateFolderType) {
             </Typography>
 
             {acceptedFiles.length > 0 ? (
-              acceptedFiles.map((file) => {
+              acceptedFiles.map((file,index) => {
                 return (
                   <Box
+                    key={file.id+'-'+index}
                     sx={{
                       width: "100%",
-                      backgroundColor: "#e8f0fe",
+                      // backgroundColor: "#e8f0fe",
                       // color: "#185abc",
                       border: "1px solid lighgray",
                       "&:hover": {
@@ -117,7 +144,7 @@ export default function UploadAssets({ isOpen, closeModal }: CreateFolderType) {
                       cursor: "pointer",
                     }}
                   >
-                    <Typography sx={{ color: "#3c4043",maxWidth:'220px',overflowX:'scroll' }}>
+                    <Typography sx={{ maxWidth: "220px", overflowX: "scroll" }}>
                       {file?.name}
                     </Typography>
                     <div>
@@ -136,7 +163,7 @@ export default function UploadAssets({ isOpen, closeModal }: CreateFolderType) {
                         />
                       )}
                       <HighlightOffIcon
-                        sx={{margin:'0px 2px'}}
+                        sx={{ margin: "0px 2px" }}
                         onClick={() => {
                           setAcceptedFiles((prevState) => {
                             return prevState.filter((f) => f.id !== file.id);
@@ -150,9 +177,15 @@ export default function UploadAssets({ isOpen, closeModal }: CreateFolderType) {
             ) : (
               <Dropzone
                 onDrop={(acceptedFiles: any[]) => {
-                  setAcceptedFiles(acceptedFiles.map((file)=>(
-                    {id:nanoid(),name:file.path,type: file.type,size:file.size,blob:file}
-                    )));
+                  setAcceptedFiles(
+                    acceptedFiles.map((file) => ({
+                      id: nanoid(),
+                      name: file.path,
+                      type: file.type,
+                      size: file.size,
+                      blob: file,
+                    }))
+                  );
                 }}
               >
                 {({ getRootProps, getInputProps }) => (
@@ -178,7 +211,7 @@ export default function UploadAssets({ isOpen, closeModal }: CreateFolderType) {
               sx={{ width: "100%", margin: "2em 0em" }}
               variant="contained"
               size="medium"
-              //   onClick={onSubmitHandler}
+              onClick={()=>{onSubmitHandler(acceptedFiles)}}
             >
               Upload
             </Button>

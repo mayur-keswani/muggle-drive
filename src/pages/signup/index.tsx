@@ -47,7 +47,7 @@ const Signup = () => {
             setIsloading(false);
 
             // {"AttributeName": "email","DeliveryMedium": "EMAIL","Destination": "m***@g***"};
-            console.log(result);
+            // console.log(result);
             updateNotification({type:"success",message:"Signup Successfull,Please Check you Mail for Verification code!"});
               
             updateUserHandler({ username });

@@ -41,7 +41,7 @@ const Login = () => {
     cognitoUser.authenticateUser(payload, {
       onSuccess(result: CognitoUserSession) {
         setIsLoading(false)
-        console.log(result);
+        // console.log(result);
         // {
         // "idToken": {
         //      "jwtToken": "eyJraWQiOiJxN0FKc09yK2xWUlI5Sk9VVHduZlNzeHJ3YXcwSzdkZWV6bXIxRHRnR1NzPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI0ZDNkZjQxNy1iOWIxLTRiNmUtOWNhMi0zODY5YzQ4NmQ1M2EiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfUVdtZlgzTTZVIiwiY29nbml0bzp1c2VybmFtZSI6Ik1heXVyIiwib3JpZ2luX2p0aSI6ImJjN2NmMGY2LTdkODctNDQxZC1iZjY5LTcxNmM3NTNhMmVmMyIsImF1ZCI6IjJ0Zzc3cmw5OGQ4bjRvNW1pYmJrbTlndGRrIiwiZXZlbnRfaWQiOiI2NGQ3ZWE2Ny1lYTVhLTQ0MGQtOGYyNS0yYTdiNTZlNjQyMjUiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTY3NDMwNzAyOCwiZXhwIjoxNjc0MzEwNjI4LCJpYXQiOjE2NzQzMDcwMjgsImp0aSI6IjljMDU3ZGZmLTVlZjEtNDZjYi1hODdiLTY2Njc0YTJiYzlkOSIsImVtYWlsIjoibWUubWF5dXJrZXN3YW5pQGdtYWlsLmNvbSJ9.Kxky1ViE1JGVmsAts-UFieva5T8RKKlrHX9lw1WVve4rpb8rCtxh2ijQ_z5ctzJVE0i3pXqwlORx2rtKfRd5UyNpPsxtnwu9tBmbCZIugIJe8wTNJ4l5NJxbrro12KxfLRdabR2y_pU6UsM-ktbAqwvJ4Lql8TQb1mqa1Sw7X1izyd77q9KFAGjm1UjTD4t_LteDBc65DPvOh85JISptn8MyArt3FgSXIl0-05tUz8v75su0DvjfiZFLNQ5r0lnhsW7g9a-CzOgYZ_3tgV5VfByZppiNZgMFCgq864d7vtJ-VLpSSF2wY3JOqXk-LmA2bUydOAQg4tMZ32DIewrmNQ",

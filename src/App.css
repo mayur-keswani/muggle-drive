@@ -19,3 +19,24 @@
     filter: blur(1.7em);
     z-index: -1;
 }
+
+/* width */
+::-webkit-scrollbar {
+  /* width:0.2px; */
+  height: 0.3em;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #eee5e5;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(48, 86, 99);
+}
+
+/* Handle on hover */
+/* ::-webkit-scrollbar-thumb:hover {
+  background: #555;
+} */

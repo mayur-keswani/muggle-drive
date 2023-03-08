@@ -11,13 +11,17 @@ const handleTokenExpiry=()=>{
 instance.interceptors.request.use(
   function (config:any) {
     // Do something before request is sento
-    if(config?.url?.indexOf('/login') === -1){
-        if (!config.headers.Authorization) {
-          if(!config.headers){
-            config.headers={}
-          }
-          config.headers["Authorization"] = getAuth().idToken;
+    if (
+      config?.url?.indexOf("/login") === -1 &&
+      config?.url?.indexOf("s3.amazonaws.com") === -1
+    ) {
+      if (!config.headers.Authorization) {
+        if (!config.headers) {
+          config.headers = {};
         }
+
+        config.headers["Authorization"] = getAuth().idToken;
+      }
     }
     
     return config;
