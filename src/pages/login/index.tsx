@@ -2,8 +2,7 @@ import React, { useContext, useState } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import Avatar from "@mui/material/Avatar";
-import { Box, Button} from "@mui/material";
+import { Box, Button, FormControl, InputLabel} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import {  useNavigate } from "react-router-dom";
 import {
@@ -16,10 +15,16 @@ import { UserContext } from "../../context/UserContext";
 import { NotificationContent } from "../../context/NotificationContext";
 import {LoadingButton} from "@mui/lab";
 import { MY_DRIVE } from "../../context/constants";
+import IconButton from "@mui/material/IconButton";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword,setShowPassword] = useState(false)
   const [isLoading,setIsLoading] = useState(false)
   const {updateNotification} = useContext(NotificationContent)
   const navigate = useNavigate();
@@ -109,7 +114,7 @@ const Login = () => {
   };
   return (
     <main className="auth-page d-flex flex-column align-items-center justify-content-center">
-      <Box  sx={{width:'100%',textAlign:'center' ,padding:'1em 0em'}}>
+      <Box sx={{ width: "100%", textAlign: "center", padding: "1em 0em" }}>
         <h4 className="gradiendText">Welcome to MuggleDrive</h4>
         <Typography variant="h6" color="text.secondary">
           Clone of Google Drive
@@ -137,14 +142,42 @@ const Login = () => {
             }}
             sx={{ width: "100%", margin: "1em" }}
           />
-          <TextField
+          {/* <TextField
             label="Password"
             value={password}
+            type="password"
             onChange={(e) => {
               setPassword(e.target.value);
             }}
             sx={{ width: "100%" }}
-          />
+          /> */}
+          <FormControl variant="outlined" sx={{ width: "100%" }}>
+            <InputLabel htmlFor="outlined-adornment-password">
+              Password
+            </InputLabel>
+            <OutlinedInput
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+              label="Password"
+              sx={{ width: "100%" }}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => {
+                      setShowPassword((prevValue) => !prevValue);
+                    }}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
           <Box
             sx={{
               width: "100%",

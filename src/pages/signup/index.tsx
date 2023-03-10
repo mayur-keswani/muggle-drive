@@ -1,10 +1,8 @@
 import React, { useState, useContext } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import Avatar from "@mui/material/Avatar";
-import { Box, Button, CardActionArea, CardActions } from "@mui/material";
+import { Box, Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { useNavigate } from "react-router-dom";
 import { userPool } from "../../utils/UserPool";
@@ -12,11 +10,16 @@ import { CognitoUserAttribute } from "amazon-cognito-identity-js";
 import { UserContext } from "../../context/UserContext";
 import { NotificationContent } from "../../context/NotificationContext";
 import { LoadingButton } from "@mui/lab";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [isLoading,setIsloading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
+
 
   const { updateUserHandler } = useContext(UserContext);
   const { updateNotification } = useContext(NotificationContent);
@@ -98,14 +101,42 @@ const Signup = () => {
               setEmail(e.target.value);
             }}
           />
-          <TextField
+          {/* <TextField
             label="Password"
             sx={{ width: "100%" }}
             value={password}
             onChange={(e) => {
               setPassword(e.target.value);
             }}
-          />
+          /> */}
+          <FormControl variant="outlined" sx={{ width: "100%" }}>
+            <InputLabel htmlFor="outlined-adornment-password">
+              Password
+            </InputLabel>
+            <OutlinedInput
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+              label="Password"
+              sx={{ width: "100%" }}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => {
+                      setShowPassword((prevValue) => !prevValue);
+                    }}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
+
           <Box
             sx={{
               width: "100%",
