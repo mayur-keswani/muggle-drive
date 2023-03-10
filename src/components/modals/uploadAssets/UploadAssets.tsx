@@ -14,6 +14,10 @@ import {nanoid} from 'nanoid'
 import { createFileAPI, getSignedURLAPI, uploadToS3API } from "../../../lib/lambdaApi";
 import { FilesContext } from "../../../context/FileContext";
 import config from "../../../lib/config";
+import { styled } from "@mui/system";
+import LinearProgress, {
+  linearProgressClasses,
+} from "@mui/material/LinearProgress";
 
 const style = {
   position: "absolute",
@@ -43,46 +47,76 @@ type UploadAssetType={
 export default function UploadAssets({ isOpen, closeModal, parentRef }: CreateFolderType) {
 
   const [acceptedFiles, setAcceptedFiles] = useState<UploadAssetType[]>([]);
-  const [croppingImage,setCroppingImage] = useState({
-    url:'',
-    id:''
+  const [croppingImage,setCroppingImage] = useState({url:'',id:''})
+  const [showCropImageModal,setShowCropImageModal]=useState(false);
+  const [uploadStatus,setUploadStatus] = useState({
+    inProgress:false,
+    currentNo:0,
+    progressPercent:0
   })
-  const [showCropImageModal,setShowCropImageModal]=useState(false)
-
   const {addFile}=useContext(FilesContext)
 
-
   const uploadAssetsHandler = async (file: UploadAssetType) => {
-    try{
+    try {
       let fileName = file.name + Date.now();
       let bucketName = config.awsBucketName;
+
       const payload = {
-        
         name: fileName,
         type: file.type,
         size: file.size,
         url: `https://s3.amazonaws.com/${bucketName}/${fileName}`,
         parentRef: parentRef,
       };
-      const {data:{body:signedURL}} = await getSignedURLAPI(payload);
-      await uploadToS3API(signedURL,file.blob);
-      const {data}=await createFileAPI(payload);
+      const {
+        data: { body: signedURL },
+      } = await getSignedURLAPI(payload);
+
+
+      await uploadToS3API(signedURL, file.blob, (uploadProgress: number) => {
+        setUploadStatus((prevState) => ({
+          ...prevState,
+          progressPercent: uploadProgress,
+        }));
+      });
+      const { data } = await createFileAPI(payload);
       addFile(data.body);
-      closeModal()
-    }catch(error){
-      console.log(error)
+    } catch (error) {
+      console.log(error);
     }
-    
-  }
-  const onSubmitHandler = async(acceptedFiles:any[])=>{
-    try{
+  };
+
+  const onSubmitHandler = async (acceptedFiles: any[]) => {
+    try {
       for (const iterator of acceptedFiles) {
-        await uploadAssetsHandler(iterator)
+        setUploadStatus((prevState) => ({
+          ...prevState,
+          currentNo: prevState.currentNo + 1,
+          inProgress: true,
+        }));
+        await uploadAssetsHandler(iterator);
+        setUploadStatus((prevState) => ({ ...prevState, inProgress: false }));
       }
-    }catch(error){
-      console.log(error)
+      closeModal();
+
+    } catch (error) {
+      console.log(error);
     }
-  }
+  };
+
+  const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+    height: 10,
+    borderRadius: 5,
+    [`&.${linearProgressClasses.colorPrimary}`]: {
+      backgroundColor:
+        theme.palette.grey[theme.palette.mode === "light" ? 200 : 800],
+    },
+    [`& .${linearProgressClasses.bar}`]: {
+      borderRadius: 5,
+      backgroundColor: theme.palette.mode === "light" ? "#1a90ff" : "#308fe8",
+    },
+  }));
+
   return (
     <div>
       {showCropImageModal && (
@@ -96,7 +130,6 @@ export default function UploadAssets({ isOpen, closeModal, parentRef }: CreateFo
             let temp = acceptedFiles.map((file) =>
               file.id === croppingImage.id ? { ...file, blob } : file
             );
-
             setAcceptedFiles(temp);
             setShowCropImageModal(false);
           }}
@@ -136,10 +169,10 @@ export default function UploadAssets({ isOpen, closeModal, parentRef }: CreateFo
             </Typography>
 
             {acceptedFiles.length > 0 ? (
-              acceptedFiles.map((file,index) => {
+              acceptedFiles.map((file, index) => {
                 return (
                   <Box
-                    key={file.id+'-'+index}
+                    key={file.id + "-" + index}
                     sx={{
                       width: "100%",
                       // backgroundColor: "#e8f0fe",
@@ -219,11 +252,26 @@ export default function UploadAssets({ isOpen, closeModal, parentRef }: CreateFo
               </Dropzone>
             )}
 
+            {uploadStatus.inProgress && (
+              <Box sx={{ flexGrow: 1 }}>
+                <Typography>
+                  Uploading {uploadStatus.currentNo} out of{" "}
+                  {acceptedFiles.length}
+                </Typography>
+                <BorderLinearProgress
+                  variant="determinate"
+                  value={uploadStatus.progressPercent}
+                />
+              </Box>
+            )}
+
             <Button
               sx={{ width: "100%", margin: "2em 0em" }}
               variant="contained"
               size="medium"
-              onClick={()=>{onSubmitHandler(acceptedFiles)}}
+              onClick={() => {
+                onSubmitHandler(acceptedFiles);
+              }}
             >
               Upload
             </Button>

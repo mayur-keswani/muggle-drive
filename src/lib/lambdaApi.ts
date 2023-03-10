@@ -59,12 +59,15 @@ export const getSignedURLAPI = async (payload:any)=>{
   return axios.post(config.apiEndpoint + `/files/upload`,payload);
 }
 
-export const uploadToS3API = async(url:string,file:any)=>{
-  return axios({
-    method: "put",
-    url,
-    data: file,
+export const uploadToS3API = async(url:string,file:any,cb:(progress:number)=>void)=>{
+  return axios.put(url, file, {
     headers: { "Content-Type": "multipart/form-data" },
+    onUploadProgress: function (progressEvent) {
+      var percentCompleted = Math.round(
+        (progressEvent.loaded * 100) / (progressEvent?.total)!
+      );
+      cb(percentCompleted);
+    },
   });
 };
 
