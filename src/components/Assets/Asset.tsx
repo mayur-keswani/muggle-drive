@@ -5,19 +5,19 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { Button, CardActionArea, CardActions } from "@mui/material";
 import PictureAsPdfOutlinedIcon from '@mui/icons-material/PictureAsPdfOutlined';
-import { AssetType } from "../types";
+import ImageIcon from "@mui/icons-material/Image";
+import { AssetType, FileStructureType } from "../../lib/types.index";
 
 type AssetComponentType = {
-  type: string;
-  details: any;
+  details: FileStructureType;
 };
 
-const Asset: React.FC<AssetComponentType> = (props) => {
+const Asset: React.FC<AssetComponentType> = ({details:file}) => {
   const icon =
-    props.type === AssetType.PDF ? (
+    file.type === AssetType.PDF ? (
       <PictureAsPdfOutlinedIcon />
     ) : (
-      <PictureAsPdfOutlinedIcon />
+      <ImageIcon />
     );
 
   return (
@@ -26,13 +26,17 @@ const Asset: React.FC<AssetComponentType> = (props) => {
         <CardMedia
           component="img"
           height="140"
-          image="https://images.pexels.com/photos/12358386/pexels-photo-12358386.jpeg"
-          alt="green iguana"
-          sx={{objectFit:'contain',width:'100%'}}
+          image={file.url}
+          alt={file.name}
+          sx={{ objectFit: "contain", width: "100%" }}
         />
         <CardContent className="d-flex align-items-center py-1 m-0">
-          <Typography gutterBottom component="div">
-            {icon} {props.details.name}
+          <Typography
+            gutterBottom
+            component="div"
+            noWrap
+          >
+            {icon} {file.name}
           </Typography>
         </CardContent>
       </CardActionArea>

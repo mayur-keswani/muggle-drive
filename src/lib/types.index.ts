@@ -33,9 +33,9 @@ export type FileStructureType = {
   isShared:boolean;
   isStarred:boolean;
 
-  fileType: string;
+  type: string;
   size: number;
-  fileUrl: string;
+  url: string;
 
   creationDate: string;
 };
@@ -48,7 +48,10 @@ export type SectionType =
   | typeof BIN
   | typeof RECENT;
 
-
+export enum AssetType {
+  PDF = "application/pdf",
+  DOCS = "application/document",
+}
   //THEME
 export type Skin = "default" | "bordered" | "semi-dark";
 export type ThemeColor =

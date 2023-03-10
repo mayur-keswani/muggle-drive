@@ -1,33 +1,48 @@
 import React, { useState } from "react";
 import { FileStructureType, SectionType } from "../lib/types.index";
 
-export const FilesContent = React.createContext<{
-  files:FileStructureType[];
-  addFiles: (payload: FileStructureType) => void;
-  removeFiles: (id: string) => void;
+export const FilesContext = React.createContext<{
+  files: FileStructureType[];
+  setInitialFilesList: (payload: FileStructureType[]) => void;
+  addFile: (payload: FileStructureType) => void;
+  removeFile: (id: string, removePermanent: boolean) => void;
   updateFiles: (payload: FileStructureType) => void;
 }>({
   files: [],
-  addFiles: () => {},
-  removeFiles: () => {},
+  setInitialFilesList: () => {},
+  addFile: () => {},
+  removeFile: () => {},
   updateFiles: () => {},
 });
 
 const FilesProvider = (props: any) => {
   const [files, setFiles] = useState<FileStructureType[]>([]);
 
-  const addFiles = (payload: FileStructureType) => {
-    let upldatedList = files.concat(payload);
-    setFiles(upldatedList);
-  };
+   const setInitialFilesList = (payload: FileStructureType[]) => {
+     setFiles(payload);
+   };
+
+   const addFile = (payload: FileStructureType) => {
+     let upldatedList = files.concat(payload);
+
+     setFiles(upldatedList);
+   };
 
 
-  const removeFiles = (id: string) => {
-     let updatedList = files.map((file: FileStructureType) =>
-       file.id === id ? { ...file, isDeleted: true } : file
-     );
-     setFiles([...updatedList]);
-  };
+    const removeFile = (id: string, removePermanent: boolean) => {
+      let updatedList;
+      if (removePermanent) {
+        updatedList = files.filter(
+          (file: FileStructureType) => file.id !== id
+        );
+      } else {
+        updatedList = files.map((file: FileStructureType) =>
+          file.id === id ? { ...file, isDeleted: true } : file
+        );
+      }
+
+      setFiles([...updatedList]);
+    };
 
 
   const updateFiles = (payload: FileStructureType) => {
@@ -37,16 +52,17 @@ const FilesProvider = (props: any) => {
     setFiles(updatedList);
   };
   return (
-    <FilesContent.Provider
+    <FilesContext.Provider
       value={{
         files,
-        addFiles,
-        removeFiles,
+        setInitialFilesList,
+        addFile,
+        removeFile,
         updateFiles,
       }}
     >
       {props.children}
-    </FilesContent.Provider>
+    </FilesContext.Provider>
   );
 };
 

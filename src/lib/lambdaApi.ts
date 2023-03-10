@@ -40,11 +40,26 @@ export const recoverFolderAPI = async (id: string) => {
 };
 
 /** FILES SECTION */
-export const getSignedURLAPI = async (payload:{fileName:string,fileType:string})=>{
+
+export const fetchFiles = () => {
+  return axios.get(config.apiEndpoint + "/files");
+};
+
+export const createFileAPI = async (payload: {
+  name: string;
+  type: String;
+  size: Number;
+  url: String;
+  parentRef: string;
+}) => {
+  return await axios.post(config.apiEndpoint + "/files", payload);
+};
+
+export const getSignedURLAPI = async (payload:any)=>{
   return axios.post(config.apiEndpoint + `/files/upload`,payload);
 }
 
-export const uploadAssetsAPI = async(url:string,file:any)=>{
+export const uploadToS3API = async(url:string,file:any)=>{
   return axios({
     method: "put",
     url,
@@ -52,3 +67,4 @@ export const uploadAssetsAPI = async(url:string,file:any)=>{
     headers: { "Content-Type": "multipart/form-data" },
   });
 };
+

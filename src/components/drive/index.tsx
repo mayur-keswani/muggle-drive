@@ -6,7 +6,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 
 import Folder from "../folders/Folder";
 import Asset from "../Assets/Asset";
-import { fetchFolders } from "../../lib/lambdaApi";
+import { fetchFiles, fetchFolders } from "../../lib/lambdaApi";
 import { NotificationContent } from "../../context/NotificationContext";
 import { FileStructureType, FolderStructureType, SectionType } from "../../lib/types.index";
 import { FoldersContent } from "../../context/FolderContext";
@@ -16,7 +16,7 @@ import Skeleton from "@mui/material/Skeleton";
 import { useParams } from "react-router-dom";
 import EmptyState from "../commons/empty-state/EmptyState";
 import Divider from "@mui/material/Divider";
-import { FilesContent } from "../../context/FileContext";
+import { FilesContext } from "../../context/FileContext";
 
 type DashBoardSectionPropType={
   showFolders:boolean,
@@ -31,26 +31,40 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
   const [folderType, setFolderType] = useState<SectionType>(MY_DRIVE);
 
   const { updateNotification } = useContext(NotificationContent);
-  const {folders,setInitialFolderList} = useContext(FoldersContent);
-  const {files} = useContext(FilesContent)
+  const { folders, setInitialFolderList } = useContext(FoldersContent);
+  const { files, setInitialFilesList } = useContext(FilesContext);
 
   const { sectionType, folderId } = useParams();
 
   
-  const loadFolders=async()=>{
+  const loadFolders = async () => {
     try {
       setIsFoldersLoading(true);
       const response: any = await fetchFolders();
       setIsFoldersLoading(false);
       setInitialFolderList(response.data.body.Items);
-    } catch (error:any) {
+    } catch (error: any) {
       setIsFoldersLoading(false);
       updateNotification({
         type: "error",
         message: error?.response?.data?.message,
       });
     }
-  }
+  };
+  const loadFiles = async () => {
+    try {
+      setIsFilesLoading(true);
+      const response: any = await fetchFiles();
+      setIsFilesLoading(false);
+      setInitialFilesList(response.data.body.Items);
+    } catch (error: any) {
+      setIsFilesLoading(false);
+      updateNotification({
+        type: "error",
+        message: error?.response?.data?.message,
+      });
+    }
+  };
 
   const getSectionType=(param:string)=>{
    switch (param) {
@@ -113,7 +127,8 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
   }
 
   useEffect(()=>{
-    loadFolders()
+    loadFolders();
+    loadFiles();
   },[])
 
   useEffect(() => {
@@ -128,7 +143,7 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
       files.filter((file: FolderStructureType) => file.parentRef === "0")
     );
     setFilteredFolders(getFilderedFolder(folderType, folders, folderId ?? "0"));
-  }, [folderId, folderType, folders]);
+  }, [folderId, folderType, folders, files]);
 
   return (
     <>
@@ -163,8 +178,8 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
           ) : filteredFiles.length > 0 ? (
             <Grid container spacing={1}>
               {filteredFiles.map((file: FileStructureType) => (
-                <Grid xs={12} md={4} xl={3}>
-                  <Asset type="pdf" details={file} />
+                <Grid xs={12} md={4} xl={3} key={file.id}>
+                  <Asset details={file} />
                 </Grid>
               ))}
             </Grid>

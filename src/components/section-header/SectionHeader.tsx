@@ -32,7 +32,7 @@ const SectionHeader:React.FC<SectionHeaderPropType> = (props) => {
   return (
     <Box sx={{ margin: "1rem" }}>
       <CreateFolder
-        parentRef={props.folderId ?? '0'}
+        parentRef={props.folderId ?? "0"}
         isOpen={showCreateFolderModal}
         closeModal={() => {
           setShowCreateForderModal(false);
@@ -43,17 +43,19 @@ const SectionHeader:React.FC<SectionHeaderPropType> = (props) => {
         closeModal={() => {
           setShowUploadAssetsModal(false);
         }}
+        parentRef={props.folderId ?? "0"}
       />
 
-      {!props.folderId && <Typography
-        variant="h5"
-        
-        color={"text.secondary"}
-      >
-        {props.title}
-      </Typography>}
-      <CustBreadcrumbs folderId={props.folderId} sectionType={props.sectionType}/>
-      <Divider variant="fullWidth" sx={{opacity:'0.7'}} />
+      {!props.folderId && (
+        <Typography variant="h5" color={"text.secondary"}>
+          {props.title}
+        </Typography>
+      )}
+      <CustBreadcrumbs
+        folderId={props.folderId}
+        sectionType={props.sectionType}
+      />
+      <Divider variant="fullWidth" sx={{ opacity: "0.7" }} />
 
       {props.allowUploading && (
         <Button

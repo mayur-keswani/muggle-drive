@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -11,7 +11,8 @@ import CropIcon from "@mui/icons-material/Crop";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import CropImageModal from "../cropImage/CropImageModal";
 import {nanoid} from 'nanoid'
-import { getSignedURLAPI, uploadAssetsAPI } from "../../../lib/lambdaApi";
+import { createFileAPI, getSignedURLAPI, uploadToS3API } from "../../../lib/lambdaApi";
+import { FilesContext } from "../../../context/FileContext";
 
 const style = {
   position: "absolute",
@@ -28,6 +29,7 @@ const style = {
 type CreateFolderType = {
   isOpen: boolean;
   closeModal: any;
+  parentRef:string
 };
 type UploadAssetType={
   id: string,
@@ -36,26 +38,35 @@ type UploadAssetType={
   size: number,
   type: string
 }
-export default function UploadAssets({ isOpen, closeModal }: CreateFolderType) {
+
+export default function UploadAssets({ isOpen, closeModal, parentRef }: CreateFolderType) {
 
   const [acceptedFiles, setAcceptedFiles] = useState<UploadAssetType[]>([]);
-
   const [croppingImage,setCroppingImage] = useState({
     url:'',
     id:''
   })
   const [showCropImageModal,setShowCropImageModal]=useState(false)
 
+  const {addFile}=useContext(FilesContext)
+
 
   const uploadAssetsHandler = async (file: UploadAssetType) => {
     try{
-      const {data:{body:signedURL}} = await getSignedURLAPI({
-        fileName: file.name,
-        fileType: 'multipart/form-data',
-      });
-      const resp=await uploadAssetsAPI(signedURL,file.blob);
-
-      console.log(resp);
+      let fileName = file.name + Date.now();
+      let bucketName = "muggledrive-userfiles";
+      const payload = {
+        
+        name: fileName,
+        type: file.type,
+        size: file.size,
+        url: `https://s3.amazonaws.com/${bucketName}/${fileName}`,
+        parentRef: parentRef,
+      };
+      const {data:{body:signedURL}} = await getSignedURLAPI(payload);
+      await uploadToS3API(signedURL,file.blob);
+      const {data}=await createFileAPI(payload);
+      addFile(data.body);
       closeModal()
     }catch(error){
       console.log(error)
