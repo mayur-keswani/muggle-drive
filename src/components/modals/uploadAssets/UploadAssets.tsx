@@ -13,6 +13,7 @@ import CropImageModal from "../cropImage/CropImageModal";
 import {nanoid} from 'nanoid'
 import { createFileAPI, getSignedURLAPI, uploadToS3API } from "../../../lib/lambdaApi";
 import { FilesContext } from "../../../context/FileContext";
+import config from "../../../lib/config";
 
 const style = {
   position: "absolute",
@@ -54,7 +55,7 @@ export default function UploadAssets({ isOpen, closeModal, parentRef }: CreateFo
   const uploadAssetsHandler = async (file: UploadAssetType) => {
     try{
       let fileName = file.name + Date.now();
-      let bucketName = "muggledrive-userfiles";
+      let bucketName = config.awsBucketName;
       const payload = {
         
         name: fileName,
