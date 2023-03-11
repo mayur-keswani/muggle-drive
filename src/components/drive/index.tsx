@@ -91,41 +91,70 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
   //   }
   // }
 
-  const getFilderedFolder =(sectionType:SectionType,folderList:FolderStructureType[],parentRef:string = '0')=>{
-    if(sectionType === MY_DRIVE){
+  const getFilteredFolder = (
+    sectionType: SectionType,
+    folderList: FolderStructureType[],
+    parentRef: string = "0"
+  ) => {
+    if (sectionType === MY_DRIVE) {
       return folderList.filter(
         (folder: FolderStructureType) =>
           folder.parentRef === parentRef &&
           !folder.isDeleted &&
-          !folder.isShared 
-          // !folder.isStarred
+          !folder.isShared
+        // !folder.isStarred
       );
     }
-    if(sectionType === BIN){
-      if(parentRef !== '0'){
-         return folderList.filter(
-           (folder: FolderStructureType) =>
-             folder.parentRef === parentRef
-         );
+    if (sectionType === BIN) {
+      if (parentRef !== "0") {
+        return folderList.filter(
+          (folder: FolderStructureType) => folder.parentRef === parentRef
+        );
       }
       return folderList.filter(
-        (folder: FolderStructureType) =>
-          folder.isDeleted 
+        (folder: FolderStructureType) => folder.isDeleted
       );
     }
-    if(sectionType ===STARRED){
+    if (sectionType === STARRED) {
       return folderList.filter(
         (folder: FolderStructureType) =>
-          folder.parentRef === parentRef &&
-          folder.isStarred &&
-          !folder.isShared
+          folder.parentRef === parentRef && folder.isStarred && !folder.isShared
+      );
+    } else {
+      return [];
+    }
+  };
+
+  const getFilteredFiles = (
+    sectionType: SectionType,
+    filesList: FileStructureType[],
+    parentRef: string = "0"
+  ) => {
+    if (sectionType === MY_DRIVE) {
+      return filesList.filter(
+        (file: FolderStructureType) =>
+          file.parentRef === parentRef && !file.isDeleted && !file.isShared
+        // !folder.isStarred
       );
     }
-    else{
-      return []
+    if (sectionType === BIN) {
+      if (parentRef !== "0") {
+        return filesList.filter(
+          (file: FolderStructureType) => file.parentRef === parentRef
+        );
+      }
+      return filesList.filter((file: FolderStructureType) => file.isDeleted);
     }
-  }
-
+    if (sectionType === STARRED) {
+      return filesList.filter(
+        (file: FolderStructureType) =>
+          file.parentRef === parentRef && file.isStarred && !file.isShared
+      );
+    } else {
+      return [];
+    }
+  };
+   
   useEffect(()=>{
     loadFolders();
     loadFiles();
@@ -139,10 +168,8 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
   
 
   useEffect(() => {
-    setFilteredFiles(
-      files.filter((file: FolderStructureType) => file.parentRef === "0")
-    );
-    setFilteredFolders(getFilderedFolder(folderType, folders, folderId ?? "0"));
+    setFilteredFiles(getFilteredFiles(folderType, files, folderId ?? "0"));
+    setFilteredFolders(getFilteredFolder(folderType, folders, folderId ?? "0"));
   }, [folderId, folderType, folders, files]);
 
   return (
