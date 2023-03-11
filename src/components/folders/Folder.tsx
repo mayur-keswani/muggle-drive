@@ -143,7 +143,7 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
           width: "100%",
         }}
       >
-        {data?.isStarred && <StarsIcon fontSize="small" />}
+        {data?.isStarred && <StarsIcon fontSize="small" style={{ color: "#e89a0f" }}/>}
         <FolderIcon
           style={{ marginRight: "10px" }}
           fontSize="large" 

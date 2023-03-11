@@ -71,3 +71,32 @@ export const uploadToS3API = async(url:string,file:any,cb:(progress:number)=>voi
   });
 };
 
+export const deleteFileAPI = async (id: string) => {
+  return await axios.delete(config.apiEndpoint + `/files/${id}`);
+};
+
+export const recoverFileAPI = async (id: string) => {
+  return await axios.delete(config.apiEndpoint + `/files/${id}`, {
+    data: {
+      mode: "recover",
+    },
+  });
+};
+
+export const starredFileAPI = async (id: string) => {
+  return await axios.put(
+    config.apiEndpoint + `/files/${id}`,
+    {},
+    { params: { mode: "starred" } }
+  );
+};
+
+export const unStarredFileAPI = async (id: string) => {
+  return await axios.put(
+    config.apiEndpoint + `/files/${id}`,
+    {},
+    {
+      params: { mode: "unstarred" },
+    }
+  );
+};

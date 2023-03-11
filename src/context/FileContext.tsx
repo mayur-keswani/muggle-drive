@@ -6,51 +6,58 @@ export const FilesContext = React.createContext<{
   setInitialFilesList: (payload: FileStructureType[]) => void;
   addFile: (payload: FileStructureType) => void;
   removeFile: (id: string, removePermanent: boolean) => void;
-  updateFiles: (payload: FileStructureType) => void;
+  updateFile: (id: string, payload: any) => void;
+  recoverFile: (id: string) => void;
 }>({
   files: [],
   setInitialFilesList: () => {},
   addFile: () => {},
   removeFile: () => {},
-  updateFiles: () => {},
+  updateFile: () => {},
+  recoverFile: () => {},
 });
 
 const FilesProvider = (props: any) => {
   const [files, setFiles] = useState<FileStructureType[]>([]);
 
-   const setInitialFilesList = (payload: FileStructureType[]) => {
-     setFiles(payload);
-   };
+  const setInitialFilesList = (payload: FileStructureType[]) => {
+    setFiles(payload);
+  };
 
-   const addFile = (payload: FileStructureType) => {
-     let upldatedList = files.concat(payload);
+  const addFile = (payload: FileStructureType) => {
+    let upldatedList = files.concat(payload);
 
-     setFiles(upldatedList);
-   };
+    setFiles(upldatedList);
+  };
 
+  const removeFile = (id: string, removePermanent: boolean) => {
+    let updatedList;
+    if (removePermanent) {
+      updatedList = files.filter((file: FileStructureType) => file.id !== id);
+    } else {
+      updatedList = files.map((file: FileStructureType) =>
+        file.id === id ? { ...file, isDeleted: true } : file
+      );
+    }
 
-    const removeFile = (id: string, removePermanent: boolean) => {
-      let updatedList;
-      if (removePermanent) {
-        updatedList = files.filter(
-          (file: FileStructureType) => file.id !== id
-        );
-      } else {
-        updatedList = files.map((file: FileStructureType) =>
-          file.id === id ? { ...file, isDeleted: true } : file
-        );
-      }
+    setFiles([...updatedList]);
+  };
 
-      setFiles([...updatedList]);
-    };
-
-
-  const updateFiles = (payload: FileStructureType) => {
+  const updateFile = (id: string, payload: any) => {
     let updatedList = files.map((file: FileStructureType) =>
-      file.id === payload.id ? { ...file, ...payload } : file
+      file.id === id ? { ...file, ...payload } : file
     );
     setFiles(updatedList);
   };
+
+  const recoverFile = (id: string) => {
+    let updatedList = files.map((file: FileStructureType) =>
+      file.id === id ? { ...file, isDeleted: false } : file
+    );
+
+    setFiles([...updatedList]);
+  };
+
   return (
     <FilesContext.Provider
       value={{
@@ -58,7 +65,8 @@ const FilesProvider = (props: any) => {
         setInitialFilesList,
         addFile,
         removeFile,
-        updateFiles,
+        updateFile,
+        recoverFile,
       }}
     >
       {props.children}

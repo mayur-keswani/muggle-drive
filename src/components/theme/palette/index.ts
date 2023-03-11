@@ -13,7 +13,7 @@ const DefaultPalette = (mode: PaletteMode, skin: any) => {
     } else if (skin === 'bordered' && mode === 'dark') {
       return '#30334E'
     } else if (mode === 'light') {
-      return '#F7F7F9'
+      return  '#ffffff'//'#F7F7F9'
     } else return '#282A42'
   }
 

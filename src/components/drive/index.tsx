@@ -205,8 +205,8 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
           ) : filteredFiles.length > 0 ? (
             <Grid container spacing={1}>
               {filteredFiles.map((file: FileStructureType) => (
-                <Grid xs={12} sm={5} md={3} xl={3}  key={file.id}>
-                  <Asset details={file} />
+                <Grid xs={12} sm={5} md={3} xl={3} key={file.id}>
+                  <Asset details={file} sectionType={folderType} />
                 </Grid>
               ))}
             </Grid>
@@ -217,7 +217,7 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
       )}
 
       {props.showFolders && (
-        <Box sx={{ padding: "0px 1em",margin:'2.5em 0' }}>
+        <Box sx={{ padding: "0px 1em", margin: "2.5em 0" }}>
           <Typography sx={{ margin: "1em 0em" }} color={"text.secondary"}>
             Folders
           </Typography>
@@ -237,18 +237,18 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
               </Grid>
             </Grid>
           ) : filteredFolders.length > 0 ? (
-              <Grid container spacing={1}>
-                {filteredFolders.map((data: FolderStructureType) => (
-                    <Grid xs={12} sm={5} md={3} xl={3} key={data.id}>
-                      <Folder
-                        width="250px"
-                        height="50px"
-                        sectionType={folderType}
-                        data={data}
-                      ></Folder>
-                    </Grid>
-                ))}
-              </Grid>
+            <Grid container spacing={1}>
+              {filteredFolders.map((data: FolderStructureType) => (
+                <Grid xs={12} sm={5} md={3} xl={3} key={data.id}>
+                  <Folder
+                    width="250px"
+                    height="50px"
+                    sectionType={folderType}
+                    data={data}
+                  ></Folder>
+                </Grid>
+              ))}
+            </Grid>
           ) : (
             <EmptyState message="No Folders Found!" />
           )}
