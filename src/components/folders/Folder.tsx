@@ -24,6 +24,7 @@ import CreateFolder from "../modals/createFolder/CreateFolder";
 import Card from "@mui/material/Card";
 import StarsIcon from "@mui/icons-material/Stars";
 import StarIcon from "@mui/icons-material/Star";
+import CircularProgress from "@mui/material/CircularProgress";
 
 type FolderType = {
   data: FolderStructureType;
@@ -38,6 +39,8 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
   const [showOptions, setShowOptions] = useState<null | HTMLElement>(null);
   const [showRenameFolderModal,setShowRenameFolderModal] = useState(false)
   const [showDeleteConfirmDialog,setShowDeleteConfirmDialog] = useState(false)
+  const [isStarringFolder, setIsStarringFolder] = useState(false);
+
   const navigate =useNavigate();
 
   const onDelete=async(id:string)=>{
@@ -67,23 +70,27 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
   
   const onStarred = async (id: string) => {
     try {
+      setIsStarringFolder(true);
       const response = await starredFolderAPI(id);
+      setIsStarringFolder(false);
       updateFolder(id,{isStarred:true});
       updateNotification({ type: "success", message: "Folder Starred!" });
     } catch (error) {
-      console.log(error);
+      setIsStarringFolder(false);
       updateNotification({ type: "error", message: "Failed to Star!" });
     }
   };
 
   const onUnStarred = async (id: string) => {
     try {
+      setIsStarringFolder(true);
       const response = await unStarredFolderAPI(id);
+      setIsStarringFolder(false);
       updateFolder(id, { isStarred: false });
 
       updateNotification({ type: "success", message: "Folder removed successfully from starred-list!" });
     } catch (error) {
-      console.log(error);
+      setIsStarringFolder(false);
       updateNotification({ type: "error", message: "Failed to remove folder from starred!" });
     }
   };
@@ -143,11 +150,10 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
           width: "100%",
         }}
       >
-        {data?.isStarred && <StarsIcon fontSize="small" style={{ color: "#e89a0f" }}/>}
-        <FolderIcon
-          style={{ marginRight: "10px" }}
-          fontSize="large" 
-        />
+        {data?.isStarred && (
+          <StarsIcon fontSize="small" style={{ color: "#e89a0f" }} />
+        )}
+        <FolderIcon style={{ marginRight: "10px" }} fontSize="large" />
         <Typography>{data?.name}</Typography>
       </Box>
       <Box sx={{ float: "right" }}>
@@ -201,13 +207,18 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
 
           {sectionType !== "bin" && (
             <MenuItem
+              disabled={isStarringFolder}
               onClick={(e: any) => {
                 e.stopPropagation();
                 data.isStarred ? onUnStarred(data?.id) : onStarred(data?.id);
               }}
             >
               <ListItemIcon>
-                <StarIcon />
+                {isStarringFolder ? (
+                  <CircularProgress size={"1.2em"} />
+                ) : (
+                  <StarIcon />
+                )}
               </ListItemIcon>
               <ListItemText>
                 {!data.isStarred ? "Starred" : "Remove Starred"}

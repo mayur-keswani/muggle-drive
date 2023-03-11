@@ -4,7 +4,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Button, CardActionArea, CardActions } from "@mui/material";
+import { Button, CardActionArea, CardActions, CircularProgress } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -19,6 +19,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import StarsIcon from "@mui/icons-material/Stars";
 import StarIcon from "@mui/icons-material/Star";
+import DownloadIcon from "@mui/icons-material/Download";
 
 import {
   AssetType,
@@ -47,8 +48,11 @@ const Asset: React.FC<AssetComponentType> = ({
 }) => {
   const [showOptions, setShowOptions] = useState<null | HTMLElement>(null);
   const [showDeleteConfirmDialog, setShowDeleteConfirmDialog] = useState(false);
+  const [isStarringFile, setIsStarringFile] = useState(false);
+
   const { updateNotification } = useContext(NotificationContent);
   const { removeFile, recoverFile, updateFile } = useContext(FilesContext);
+
 
   const onDelete = async (id: string) => {
     try {
@@ -81,18 +85,22 @@ const Asset: React.FC<AssetComponentType> = ({
 
   const onStarred = async (id: string) => {
     try {
+      setIsStarringFile(true)
       const response = await starredFileAPI(id);
+      setIsStarringFile(false);
       updateFile(id, { isStarred: true });
       updateNotification({ type: "success", message: "File Starred!" });
     } catch (error) {
-      console.log(error);
+      setIsStarringFile(false);
       updateNotification({ type: "error", message: "Failed to Star!" });
     }
   };
 
   const onUnStarred = async (id: string) => {
     try {
+      setIsStarringFile(true);
       const response = await unStarredFileAPI(id);
+      setIsStarringFile(false);
       updateFile(id, { isStarred: false });
 
       updateNotification({
@@ -100,7 +108,7 @@ const Asset: React.FC<AssetComponentType> = ({
         message: "File removed successfully from starred-list!",
       });
     } catch (error) {
-      console.log(error);
+      setIsStarringFile(false);
       updateNotification({
         type: "error",
         message: "Failed to remove file from starred!",
@@ -164,6 +172,21 @@ const Asset: React.FC<AssetComponentType> = ({
                 setShowOptions(null);
               }}
             >
+              {sectionType !== "bin" && (
+                <MenuItem
+                  // onClick={(e) => {
+                  //   Navigate(`/${file.url}`);
+                  // }}
+                  href={file.url}
+                  target="_blank"
+                  component="a"
+                >
+                  <ListItemIcon>
+                    <DownloadIcon />
+                  </ListItemIcon>
+                  <ListItemText>Download</ListItemText>
+                </MenuItem>
+              )}
               {sectionType === "bin" && (
                 <MenuItem
                   onClick={(e) => {
@@ -199,9 +222,10 @@ const Asset: React.FC<AssetComponentType> = ({
                       ? onUnStarred(file?.id)
                       : onStarred(file?.id);
                   }}
+                  disabled={isStarringFile}
                 >
                   <ListItemIcon>
-                    <StarIcon />
+                    {isStarringFile ? <CircularProgress size={'1.2em'} /> : <StarIcon />}
                   </ListItemIcon>
                   <ListItemText>
                     {!file.isStarred ? "Starred" : "Remove Starred"}
