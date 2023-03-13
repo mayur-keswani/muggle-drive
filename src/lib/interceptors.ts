@@ -5,7 +5,7 @@ const instance = axios.create();
 
 const handleTokenExpiry=()=>{
     clearLocalStorage();
-    Navigate({to:'/login'})
+    window.location.reload()
 };
 
 instance.interceptors.request.use(
@@ -19,7 +19,7 @@ instance.interceptors.request.use(
         if (!config.headers) {
           config.headers = {};
         }
-
+    
         config.headers["Authorization"] = getAuth().idToken;
       }
     }
@@ -43,8 +43,8 @@ instance.interceptors.response.use(
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     console.log(error.toJSON());
-    if(error && error.response && error.response.config.url.indexOf('/login') === -1 && error.response.status === 401){
-       return handleTokenExpiry()
+    if(error && ((typeof error.response === "undefined") || (error.response && error.response.config.url.indexOf('/login') === -1 && error.response.status === 401))){
+      handleTokenExpiry()
     }
     return Promise.reject(error);
   }

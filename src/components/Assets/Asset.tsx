@@ -54,9 +54,9 @@ const Asset: React.FC<AssetComponentType> = ({
   const { removeFile, recoverFile, updateFile } = useContext(FilesContext);
 
 
-  const onDelete = async (id: string) => {
+  const onDelete = async (id: string,name:string) => {
     try {
-      const response = await deleteFileAPI(id);
+      await deleteFileAPI(id,name);
       setShowDeleteConfirmDialog(false);
       removeFile(id, sectionType === BIN);
       updateNotification({
@@ -137,7 +137,7 @@ const Asset: React.FC<AssetComponentType> = ({
           isOpen={showDeleteConfirmDialog}
           handleSubmit={(e: any) => {
             e.stopPropagation();
-            onDelete(file.id);
+            onDelete(file.id,file.name);
           }}
           title={`Delete folder ${file.name}`}
         />

@@ -71,8 +71,8 @@ export const uploadToS3API = async(url:string,file:any,cb:(progress:number)=>voi
   });
 };
 
-export const deleteFileAPI = async (id: string) => {
-  return await axios.delete(config.apiEndpoint + `/files/${id}`);
+export const deleteFileAPI = async (id: string,name:string) => {
+  return await axios.delete(config.apiEndpoint + `/files/${id}`,{data:{name}});
 };
 
 export const recoverFileAPI = async (id: string) => {

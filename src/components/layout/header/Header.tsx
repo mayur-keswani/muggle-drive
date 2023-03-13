@@ -13,9 +13,12 @@ import "./Header.css";
 import { Drawer } from "@mui/material";
 import MenuDrawer from "../../menu-drawer";
 import ThemeChanger from "./ThemeChanger";
+import { useNavigate } from "react-router-dom";
+
 const Header:React.FC = () => {
 
   const [isSideMenuOpen, setIsSideMenuOpen] =useState(false);
+  const Navigate=useNavigate()
   const theme = useTheme();
 
   const DrawerHeader = styled("div")(({ theme }) => ({
@@ -100,7 +103,7 @@ const Header:React.FC = () => {
           }}
         >
           <DrawerHeader>
-            <ThemeChanger/>
+            <ThemeChanger />
             <IconButton
               onClick={() => {
                 setIsSideMenuOpen(false);
@@ -134,6 +137,11 @@ const Header:React.FC = () => {
             <SearchIcon />
           </SearchIconWrapper>
           <StyledInputBase
+            onKeyDown={(e: any) => {
+              if (e.key === "Enter") {
+                Navigate(`/dashboard/search?q=${e.target.value}`);
+              }
+            }}
             placeholder="Search…"
             inputProps={{ "aria-label": "search" }}
           />
