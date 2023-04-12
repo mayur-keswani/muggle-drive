@@ -30,6 +30,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const {updateUserHandler}=useContext(UserContext)
+
   const onSubmitHandler = () => {
     const payload = new AuthenticationDetails({
       Username: username,
@@ -38,10 +39,8 @@ const Login = () => {
     const poolPayload = {
       Username: username,
       Pool: userPool,
-    };
-    
+    };    
     setIsLoading(true);
-
     const cognitoUser = new CognitoUser(poolPayload);
     cognitoUser.authenticateUser(payload, {
       onSuccess(result: CognitoUserSession) {
@@ -112,6 +111,7 @@ const Login = () => {
       },
     });
   };
+
   return (
     <main className="auth-page d-flex flex-column align-items-center justify-content-center">
       <Box sx={{ width: "100%", textAlign: "center", padding: "1em 0em" }}>

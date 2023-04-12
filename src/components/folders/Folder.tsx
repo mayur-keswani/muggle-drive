@@ -24,7 +24,9 @@ import CreateFolder from "../modals/createFolder/CreateFolder";
 import Card from "@mui/material/Card";
 import StarsIcon from "@mui/icons-material/Stars";
 import StarIcon from "@mui/icons-material/Star";
+import ShareIcon from "@mui/icons-material/Share";
 import CircularProgress from "@mui/material/CircularProgress";
+import ShareResource from "../modals/shareResource/ShareResource";
 
 type FolderType = {
   data: FolderStructureType;
@@ -39,6 +41,7 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
   const [showOptions, setShowOptions] = useState<null | HTMLElement>(null);
   const [showRenameFolderModal,setShowRenameFolderModal] = useState(false)
   const [showDeleteConfirmDialog,setShowDeleteConfirmDialog] = useState(false)
+  const [showShareResourceDialog,setShowShareResourceDialog] = useState(false)
   const [isStarringFolder, setIsStarringFolder] = useState(false);
 
   const navigate =useNavigate();
@@ -141,6 +144,15 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
         }}
       />
 
+      <ShareResource
+        id={data?.id}
+        type='folder'
+        isOpen={showShareResourceDialog}
+        closeModal={() => {
+          setShowShareResourceDialog(false);
+        }}
+      />
+
       <Box
         sx={{
           display: "flex",
@@ -238,7 +250,19 @@ export default function Folder({ data,sectionType, width, height }: FolderType) 
               <ListItemText>Rename</ListItemText>
             </MenuItem>
           )}
-
+          {sectionType !== "bin" && (
+            <MenuItem
+              onClick={(e: any) => {
+                e.stopPropagation();
+                setShowShareResourceDialog(true);
+              }}
+            >
+              <ListItemIcon>
+                <ShareIcon />
+              </ListItemIcon>
+              <ListItemText>Share</ListItemText>
+            </MenuItem>
+          )}
           {sectionType !== "bin" && (
             <MenuItem
               onClick={(e) => {

@@ -19,6 +19,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import StarsIcon from "@mui/icons-material/Stars";
 import StarIcon from "@mui/icons-material/Star";
+import ShareIcon from "@mui/icons-material/Share";
 import DownloadIcon from "@mui/icons-material/Download";
 
 import {
@@ -36,6 +37,7 @@ import ConfirmDialog from "../commons/confirm-dialog/ConfirmDialog";
 import { NotificationContent } from "../../context/NotificationContext";
 import { BIN } from "../../context/constants";
 import { FilesContext } from "../../context/FileContext";
+import ShareResource from "../modals/shareResource/ShareResource";
 
 type AssetComponentType = {
   details: FileStructureType;
@@ -49,6 +51,8 @@ const Asset: React.FC<AssetComponentType> = ({
   const [showOptions, setShowOptions] = useState<null | HTMLElement>(null);
   const [showDeleteConfirmDialog, setShowDeleteConfirmDialog] = useState(false);
   const [isStarringFile, setIsStarringFile] = useState(false);
+  const [showShareResourceDialog, setShowShareResourceDialog] = useState(false);
+
 
   const { updateNotification } = useContext(NotificationContent);
   const { removeFile, recoverFile, updateFile } = useContext(FilesContext);
@@ -137,9 +141,17 @@ const Asset: React.FC<AssetComponentType> = ({
           isOpen={showDeleteConfirmDialog}
           handleSubmit={(e: any) => {
             e.stopPropagation();
-            onDelete(file.id,file.name);
+            onDelete(file.id, file.name);
           }}
           title={`Delete folder ${file.name}`}
+        />
+        <ShareResource
+          id={file?.id}
+          type="folder"
+          isOpen={showShareResourceDialog}
+          closeModal={() => {
+            setShowShareResourceDialog(false);
+          }}
         />
 
         <CardContent className="d-flex align-items-center p-0 m-0">
@@ -187,6 +199,20 @@ const Asset: React.FC<AssetComponentType> = ({
                   <ListItemText>Download</ListItemText>
                 </MenuItem>
               )}
+
+              {sectionType !== "bin" && (
+                <MenuItem
+                  onClick={(e: any) => {
+                    e.stopPropagation();
+                    setShowShareResourceDialog(true);
+                  }}
+                >
+                  <ListItemIcon>
+                    <ShareIcon />
+                  </ListItemIcon>
+                  <ListItemText>Share</ListItemText>
+                </MenuItem>
+              )}
               {sectionType === "bin" && (
                 <MenuItem
                   onClick={(e) => {
@@ -225,7 +251,11 @@ const Asset: React.FC<AssetComponentType> = ({
                   disabled={isStarringFile}
                 >
                   <ListItemIcon>
-                    {isStarringFile ? <CircularProgress size={'1.2em'} /> : <StarIcon />}
+                    {isStarringFile ? (
+                      <CircularProgress size={"1.2em"} />
+                    ) : (
+                      <StarIcon />
+                    )}
                   </ListItemIcon>
                   <ListItemText>
                     {!file.isStarred ? "Starred" : "Remove Starred"}

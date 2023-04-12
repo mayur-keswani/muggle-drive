@@ -100,3 +100,14 @@ export const unStarredFileAPI = async (id: string) => {
     }
   );
 };
+
+export const shareFolderAPI = async(id:string,payload:{id:string,shareTo:string})=>{
+  return await axios.post(config.apiEndpoint+`/folders/${id}/share`,{...payload,type:'file'})
+}
+
+export const shareFileAPI = async(id:string,payload:{id:string,shareTo:string})=>{
+  return await axios.post(config.apiEndpoint + `/files/${id}/share`, {
+    ...payload,
+    type: "file",
+  });
+}
