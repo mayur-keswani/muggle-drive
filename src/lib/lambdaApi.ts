@@ -102,7 +102,7 @@ export const unStarredFileAPI = async (id: string) => {
 };
 
 export const shareFolderAPI = async(id:string,payload:{id:string,shareTo:string})=>{
-  return await axios.post(config.apiEndpoint+`/folders/${id}/share`,{...payload,type:'file'})
+  return await axios.post(config.apiEndpoint+`/folders/${id}/share`,{...payload,type:'folder'})
 }
 
 export const shareFileAPI = async(id:string,payload:{id:string,shareTo:string})=>{
@@ -111,3 +111,11 @@ export const shareFileAPI = async(id:string,payload:{id:string,shareTo:string})=
     type: "file",
   });
 }
+
+/** AUTH APIS */
+
+export const checkUserExistAPI = async (email: string) => {
+  return await axios.post(config.apiEndpoint + `/auth/user`, {
+    email,
+  });
+};

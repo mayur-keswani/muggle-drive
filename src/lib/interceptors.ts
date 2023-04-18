@@ -44,7 +44,7 @@ instance.interceptors.response.use(
     // Do something with response error
     console.log(error.toJSON());
     if(error && ((typeof error.response === "undefined") || (error.response && error.response.config.url.indexOf('/login') === -1 && error.response.status === 401))){
-      handleTokenExpiry()
+      // handleTokenExpiry()
     }
     return Promise.reject(error);
   }

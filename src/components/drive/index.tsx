@@ -100,8 +100,7 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
       return folderList.filter(
         (folder: FolderStructureType) =>
           folder.parentRef === parentRef &&
-          !folder.isDeleted &&
-          !folder.isShared
+          !folder.isDeleted 
         // !folder.isStarred
       );
     }

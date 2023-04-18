@@ -5,14 +5,13 @@ import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { TextField } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { NotificationContent } from "../../../context/NotificationContext";
 import {
-  createFolderAPI,
   shareFolderAPI,
   shareFileAPI,
-  updateFolderAPI,
+  checkUserExistAPI,
 } from "../../../lib/lambdaApi";
 import { FoldersContent } from "../../../context/FolderContext";
 import { SectionType } from "../../../lib/types.index";
@@ -37,24 +36,44 @@ type ShareResourcePropsType = {
   closeModal: any;
 };
 
+let timer: any;
 export default function ShareResource({
   id,
   type,
   isOpen,
   closeModal,
 }: ShareResourcePropsType) {
-  const [shareToUserId, setShareToUserId] = useState("");
+  const [options, setOptions] = useState<any[]>([]);
+
+  const [isChecking, setIsChecking] = useState(false);
+  const [shareToUserEmail, setSharedToUserEmail] = useState("1e12423");
   const { updateNotification } = useContext(NotificationContent);
 
+  const checkUserExist = async (value: string) => {
+    try {
+      setIsChecking(true);
+      await checkUserExistAPI(value);
+      setIsChecking(false);
+      setOptions((prevState) => [value]);
+    } catch (error) {
+      setIsChecking(false);
+    }
+  };
+  const onSelectingUser = (email: string) => {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(async () => {
+       await checkUserExist(email);
+    }, 1000);
+  };
   const onSubmit = async () => {
     try {
       let response =
         type === "file"
           ? await shareFileAPI(id, {
               id,
-              shareTo: shareToUserId,
+              shareTo: shareToUserEmail,
             })
-          : await shareFolderAPI(id, { id, shareTo: shareToUserId });
+          : await shareFolderAPI(id, { id, shareTo: shareToUserEmail });
       updateNotification({
         type: "success",
         message: "Shared Successfully!",
@@ -104,17 +123,35 @@ export default function ShareResource({
             <Typography id="transition-modal-title" variant="h6">
               {"Share Resouce"}
             </Typography>
-            <TextField
-              required
-              id="outlined-required"
-              label="name"
-              value={shareToUserId}
-              onChange={(e) => {
-                e.stopPropagation();
-                setShareToUserId(e.target.value);
+            {isChecking && (
+              <Typography color={"text.secondary"} sx={{textAlign:'right'}}>Checking </Typography>
+            )}
+            <Autocomplete
+              id="tags-outlined"
+              options={options}
+              // freeSolo
+              // getOptionLabel={(option) =>{
+              //   console.log(option.title)
+              // }}
+              defaultValue={[]}
+              filterSelectedOptions
+              onChange={(e, value) => {
+                setOptions([]);
+                setSharedToUserEmail(value);
               }}
-              sx={{ width: "100%", margin: "1em 0em" }}
+              loading={true}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="Add user email here"
+                  sx={{ width: "100%", margin: "1em 0em" }}
+                  onChange={async (e) => {
+                    await onSelectingUser(e.target.value);
+                  }}
+                />
+              )}
             />
+
             <Button
               sx={{ width: "100%" }}
               variant="contained"
