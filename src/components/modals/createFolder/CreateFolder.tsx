@@ -68,7 +68,7 @@ export default function CreateFolder({
       console.log(error)
       updateNotification({
         type: "error",
-        message: error.response?.data?.message,
+        message: error.response?.error,
       });
     }
   };

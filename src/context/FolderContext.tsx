@@ -4,13 +4,17 @@ import { BIN, MY_DRIVE } from "./constants";
 
 export const FoldersContent = React.createContext<{
   folders: FolderStructureType[];
+  sharedToMeFolders: FolderStructureType[];
+  setSharedToMeFoldersList: (payload: FolderStructureType[]) => void;
   setInitialFolderList: (payload: FolderStructureType[]) => void;
   addFolder: (payload: FolderStructureType) => void;
-  removeFolder: (id: string, removePermanent:boolean) => void;
+  removeFolder: (id: string, removePermanent: boolean) => void;
   recoverFolder: (id: string) => void;
-  updateFolder: (id:string,payload: any) => void;
+  updateFolder: (id: string, payload: any) => void;
 }>({
   folders: [],
+  sharedToMeFolders: [],
+  setSharedToMeFoldersList: () => {},
   setInitialFolderList: () => {},
   addFolder: () => {},
   removeFolder: () => {},
@@ -20,10 +24,17 @@ export const FoldersContent = React.createContext<{
 
 const FoldersProvider = (props: any) => {
   const [folders, setFolders] = useState<FolderStructureType[]>([]);
+  const [sharedToMeFolders, setSharedToMeFolders] = useState<
+    FolderStructureType[]
+  >([]);
  
   const setInitialFolderList=(payload:FolderStructureType[])=>{
     setFolders(payload);
   }
+
+  const setSharedToMeFoldersList = (payload: FolderStructureType[]) => {
+    setSharedToMeFolders(payload);
+  };
 
 
   const addFolder = (payload: FolderStructureType) => {
@@ -77,6 +88,8 @@ const FoldersProvider = (props: any) => {
         removeFolder,
         recoverFolder,
         updateFolder,
+        sharedToMeFolders,
+        setSharedToMeFoldersList,
       }}
     >
       {props.children}

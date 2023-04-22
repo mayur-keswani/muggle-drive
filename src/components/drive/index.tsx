@@ -31,7 +31,8 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
   const [folderType, setFolderType] = useState<SectionType>(MY_DRIVE);
 
   const { updateNotification } = useContext(NotificationContent);
-  const { folders, setInitialFolderList } = useContext(FoldersContent);
+  const { folders, setInitialFolderList,sharedToMeFolders, setSharedToMeFoldersList } =
+    useContext(FoldersContent);
   const { files, setInitialFilesList } = useContext(FilesContext);
 
   const { sectionType, folderId } = useParams();
@@ -42,12 +43,13 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
       setIsFoldersLoading(true);
       const response: any = await fetchFolders();
       setIsFoldersLoading(false);
-      setInitialFolderList(response.data.body.Items);
+      setInitialFolderList(response.data.body.folders.Items);
+      // setSharedToMeFoldersList(response.data.body.sharedToMe.Items);
     } catch (error: any) {
       setIsFoldersLoading(false);
       updateNotification({
         type: "error",
-        message: error?.response?.data?.message,
+        message: error?.response?.error,
       });
     }
   };
@@ -61,7 +63,7 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
       setIsFilesLoading(false);
       updateNotification({
         type: "error",
-        message: error?.response?.data?.message,
+        message: error?.response?.error
       });
     }
   };
@@ -101,7 +103,6 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
         (folder: FolderStructureType) =>
           folder.parentRef === parentRef &&
           !folder.isDeleted 
-        // !folder.isStarred
       );
     }
     if (sectionType === BIN) {
@@ -117,7 +118,14 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
     if (sectionType === STARRED) {
       return folderList.filter(
         (folder: FolderStructureType) =>
-          folder.parentRef === parentRef && folder.isStarred && !folder.isShared
+          folder.parentRef === parentRef && folder.isStarred
+      );
+    } 
+    if (sectionType === SHARED) {
+      return folderList.filter(
+        (folder: FolderStructureType) =>
+          folder.parentRef === parentRef && !folder.isDeleted
+        // !folder.isStarred
       );
     } else {
       return [];
@@ -132,7 +140,7 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
     if (sectionType === MY_DRIVE) {
       return filesList.filter(
         (file: FolderStructureType) =>
-          file.parentRef === parentRef && !file.isDeleted && !file.isShared
+          file.parentRef === parentRef && !file.isDeleted
         // !folder.isStarred
       );
     }
@@ -147,7 +155,13 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
     if (sectionType === STARRED) {
       return filesList.filter(
         (file: FolderStructureType) =>
-          file.parentRef === parentRef && file.isStarred && !file.isShared
+          file.parentRef === parentRef && file.isStarred
+      );
+    }if (sectionType === SHARED) {
+      return filesList.filter(
+        (file: FolderStructureType) =>
+          file.parentRef === parentRef && !file.isDeleted
+        // !file.isStarred
       );
     } else {
       return [];
@@ -168,7 +182,7 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
 
   useEffect(() => {
     setFilteredFiles(getFilteredFiles(folderType, files, folderId ?? "0"));
-    setFilteredFolders(getFilteredFolder(folderType, folders, folderId ?? "0"));
+    setFilteredFolders(getFilteredFolder(folderType, folderType===SHARED? sharedToMeFolders: folders, folderId ?? "0"));
   }, [folderId, folderType, folders, files]);
 
   return (

@@ -84,7 +84,7 @@ export default function ShareResource({
       console.log(error);
       updateNotification({
         type: "error",
-        message: error.response?.data?.message,
+        message: error.response?.error,
       });
     }
   };
