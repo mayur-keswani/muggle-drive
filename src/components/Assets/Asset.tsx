@@ -125,7 +125,6 @@ const Asset: React.FC<AssetComponentType> = ({
 
   return (
     <Card sx={{ width: "250px", height: "180px" }}>
-      <CardActionArea>
         <CardMedia
           component="img"
           height="140"
@@ -162,7 +161,7 @@ const Asset: React.FC<AssetComponentType> = ({
             {icon}
             {file.name}
           </Typography>
-          <Box sx={{ float: "right" }}>
+          {/* <Box sx={{ float: "right" }}> */}
             <IconButton
               
               aria-label="more"
@@ -177,7 +176,7 @@ const Asset: React.FC<AssetComponentType> = ({
             >
               <MoreVertIcon />
             </IconButton>
-          </Box>
+          {/* </Box> */}
           <Menu
             anchorEl={showOptions}
             open={!!showOptions}
@@ -277,7 +276,6 @@ const Asset: React.FC<AssetComponentType> = ({
             )}
           </Menu>
         </CardContent>
-      </CardActionArea>
       {/* <CardActions>
         <Button size="small" color="primary">
           Share
