@@ -164,6 +164,7 @@ const Asset: React.FC<AssetComponentType> = ({
           </Typography>
           <Box sx={{ float: "right" }}>
             <IconButton
+              
               aria-label="more"
               id="long-button"
               aria-controls={showOptions ? "long-menu" : undefined}
@@ -176,107 +177,105 @@ const Asset: React.FC<AssetComponentType> = ({
             >
               <MoreVertIcon />
             </IconButton>
-            <Menu
-              anchorEl={showOptions}
-              open={!!showOptions}
-              onClose={(e: any) => {
-                e.stopPropagation();
-                setShowOptions(null);
-              }}
-            >
-              {sectionType !== "bin" && (
-                <MenuItem
-                  // onClick={(e) => {
-                  //   Navigate(`/${file.url}`);
-                  // }}
-                  href={file.url}
-                  target="_blank"
-                  component="a"
-                >
-                  <ListItemIcon>
-                    <DownloadIcon />
-                  </ListItemIcon>
-                  <ListItemText>Download</ListItemText>
-                </MenuItem>
-              )}
-
-              {sectionType !== "bin" && (
-                <MenuItem
-                  onClick={(e: any) => {
-                    e.stopPropagation();
-                    setShowShareResourceDialog(true);
-                  }}
-                >
-                  <ListItemIcon>
-                    <ShareIcon />
-                  </ListItemIcon>
-                  <ListItemText>Share</ListItemText>
-                </MenuItem>
-              )}
-              {sectionType === "bin" && (
-                <MenuItem
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onRecover(file.id);
-                  }}
-                >
-                  <ListItemIcon>
-                    <AutorenewIcon />
-                  </ListItemIcon>
-                  <ListItemText>Recover</ListItemText>
-                </MenuItem>
-              )}
-              {sectionType === "bin" && (
-                <MenuItem
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowDeleteConfirmDialog(true);
-                  }}
-                >
-                  <ListItemIcon>
-                    <DeleteForeverIcon />
-                  </ListItemIcon>
-                  <ListItemText>Delete Forever</ListItemText>
-                </MenuItem>
-              )}
-
-              {sectionType !== "bin" && (
-                <MenuItem
-                  onClick={(e: any) => {
-                    e.stopPropagation();
-                    file.isStarred
-                      ? onUnStarred(file?.id)
-                      : onStarred(file?.id);
-                  }}
-                  disabled={isStarringFile}
-                >
-                  <ListItemIcon>
-                    {isStarringFile ? (
-                      <CircularProgress size={"1.2em"} />
-                    ) : (
-                      <StarIcon />
-                    )}
-                  </ListItemIcon>
-                  <ListItemText>
-                    {!file.isStarred ? "Starred" : "Remove Starred"}
-                  </ListItemText>
-                </MenuItem>
-              )}
-              {sectionType !== "bin" && (
-                <MenuItem
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowDeleteConfirmDialog(true);
-                  }}
-                >
-                  <ListItemIcon>
-                    <DeleteIcon />
-                  </ListItemIcon>
-                  <ListItemText>Delete</ListItemText>
-                </MenuItem>
-              )}
-            </Menu>
           </Box>
+          <Menu
+            anchorEl={showOptions}
+            open={!!showOptions}
+            onClose={(e: any) => {
+              e.stopPropagation();
+              setShowOptions(null);
+            }}
+          >
+            {sectionType !== "bin" && (
+              <MenuItem
+                // onClick={(e) => {
+                //   Navigate(`/${file.url}`);
+                // }}
+                href={file.url}
+                target="_blank"
+                component="a"
+              >
+                <ListItemIcon>
+                  <DownloadIcon />
+                </ListItemIcon>
+                <ListItemText>Download</ListItemText>
+              </MenuItem>
+            )}
+
+            {sectionType !== "bin" && (
+              <MenuItem
+                onClick={(e: any) => {
+                  e.stopPropagation();
+                  setShowShareResourceDialog(true);
+                }}
+              >
+                <ListItemIcon>
+                  <ShareIcon />
+                </ListItemIcon>
+                <ListItemText>Share</ListItemText>
+              </MenuItem>
+            )}
+            {sectionType === "bin" && (
+              <MenuItem
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRecover(file.id);
+                }}
+              >
+                <ListItemIcon>
+                  <AutorenewIcon />
+                </ListItemIcon>
+                <ListItemText>Recover</ListItemText>
+              </MenuItem>
+            )}
+            {sectionType === "bin" && (
+              <MenuItem
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowDeleteConfirmDialog(true);
+                }}
+              >
+                <ListItemIcon>
+                  <DeleteForeverIcon />
+                </ListItemIcon>
+                <ListItemText>Delete Forever</ListItemText>
+              </MenuItem>
+            )}
+
+            {sectionType !== "bin" && (
+              <MenuItem
+                onClick={(e: any) => {
+                  e.stopPropagation();
+                  file.isStarred ? onUnStarred(file?.id) : onStarred(file?.id);
+                }}
+                disabled={isStarringFile}
+              >
+                <ListItemIcon>
+                  {isStarringFile ? (
+                    <CircularProgress size={"1.2em"} />
+                  ) : (
+                    <StarIcon />
+                  )}
+                </ListItemIcon>
+                <ListItemText>
+                  {!file.isStarred ? "Starred" : "Remove Starred"}
+                </ListItemText>
+              </MenuItem>
+            )}
+            {sectionType !== "bin" && (
+              <MenuItem
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowDeleteConfirmDialog(true);
+                }}
+              >
+                <ListItemIcon>
+                  <DeleteIcon />
+                </ListItemIcon>
+                <ListItemText>Delete</ListItemText>
+              </MenuItem>
+            )}
+          </Menu>
         </CardContent>
       </CardActionArea>
       {/* <CardActions>

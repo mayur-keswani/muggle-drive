@@ -10,6 +10,7 @@ import VerifyUser from "./pages/verify-user";
 import MyDrive from "./components/drive";
 import { UserContext } from "./context/UserContext";
 import Folders from "./components/folders/Folders";
+import SearchComponent from "./components/search/SearchComponent";
 
 const ProtectedRoute = (props:any) => {
   if (!props.user.isLoggedIn) {
@@ -33,12 +34,14 @@ function App() {
             </ProtectedRoute>
           }
         >
+          <Route path={`/dashboard/search`} element={<SearchComponent/>}></Route>
           <Route path={`/dashboard/:sectionType`} element={<MyDrive showFolders={true} showFiles={true}/>}></Route>
           <Route path={`/dashboard/:sectionType/folders`} element={<MyDrive showFolders={true} showFiles={false}/>} />
           <Route path={`/dashboard/:sectionType/folders/:folderId`} element={<MyDrive showFolders={true} showFiles={true}/>} />
           <Route path={`/dashboard/:sectionType/folders/:folderId`} element={<MyDrive showFolders={true} showFiles={true}/>} />
           <Route path={`/dashboard/:sectionType/files`} element={<MyDrive showFolders={false} showFiles={true}/>} />
 
+          
 
           {/* <Route path={`/dashboard/${COMPUTER}`} element={<Computers showFolders={true} showFiles={true}/>} />
           <Route path={`/dashboard/${COMPUTER}/folders`} element={<Computers showFolders={true} showFiles={false}/>} />

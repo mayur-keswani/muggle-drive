@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { FileStructureType, SectionType } from "../lib/types.index";
 
 export const FilesContext = React.createContext<{
+  isLoading: Boolean;
+  updateLoaderState: (value: Boolean) => void;
   files: FileStructureType[];
   setInitialFilesList: (payload: FileStructureType[]) => void;
   addFile: (payload: FileStructureType) => void;
@@ -9,6 +11,8 @@ export const FilesContext = React.createContext<{
   updateFile: (id: string, payload: any) => void;
   recoverFile: (id: string) => void;
 }>({
+  isLoading:false,
+  updateLoaderState:()=>{},
   files: [],
   setInitialFilesList: () => {},
   addFile: () => {},
@@ -18,8 +22,13 @@ export const FilesContext = React.createContext<{
 });
 
 const FilesProvider = (props: any) => {
+  const [isLoading,setIsLoading] = useState<Boolean>(false)
   const [files, setFiles] = useState<FileStructureType[]>([]);
 
+
+  const updateLoaderState = (value: Boolean) => {
+    setIsLoading(value);
+  };
   const setInitialFilesList = (payload: FileStructureType[]) => {
     setFiles(payload);
   };
@@ -61,6 +70,8 @@ const FilesProvider = (props: any) => {
   return (
     <FilesContext.Provider
       value={{
+        isLoading,
+        updateLoaderState,
         files,
         setInitialFilesList,
         addFile,

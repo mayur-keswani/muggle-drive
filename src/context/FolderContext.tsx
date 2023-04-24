@@ -3,6 +3,8 @@ import { FolderStructureType, SectionType } from "../lib/types.index";
 import { BIN, MY_DRIVE } from "./constants";
 
 export const FoldersContent = React.createContext<{
+  isLoading:Boolean;
+  updateLoaderState:(value:Boolean)=>void,
   folders: FolderStructureType[];
   sharedToMeFolders: FolderStructureType[];
   setSharedToMeFoldersList: (payload: FolderStructureType[]) => void;
@@ -12,6 +14,8 @@ export const FoldersContent = React.createContext<{
   recoverFolder: (id: string) => void;
   updateFolder: (id: string, payload: any) => void;
 }>({
+  isLoading: false,
+  updateLoaderState:()=>{},
   folders: [],
   sharedToMeFolders: [],
   setSharedToMeFoldersList: () => {},
@@ -23,11 +27,15 @@ export const FoldersContent = React.createContext<{
 });
 
 const FoldersProvider = (props: any) => {
+  const [isLoading,setIsLoading] = useState<Boolean>(false)
   const [folders, setFolders] = useState<FolderStructureType[]>([]);
   const [sharedToMeFolders, setSharedToMeFolders] = useState<
     FolderStructureType[]
   >([]);
  
+  const updateLoaderState=(value:Boolean)=>{
+    setIsLoading(value)
+  }
   const setInitialFolderList=(payload:FolderStructureType[])=>{
     setFolders(payload);
   }
@@ -82,6 +90,8 @@ const FoldersProvider = (props: any) => {
   return (
     <FoldersContent.Provider
       value={{
+        isLoading,
+        updateLoaderState,
         folders,
         setInitialFolderList,
         addFolder,

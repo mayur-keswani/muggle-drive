@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import Logo from "../../commons/logo/Logo";
 import AccountMenu from "./account-menu";
@@ -15,65 +15,65 @@ import MenuDrawer from "../../menu-drawer";
 import ThemeChanger from "./ThemeChanger";
 import { useNavigate } from "react-router-dom";
 
-const Header:React.FC = () => {
+const Search = styled("div")(({ theme }) => ({
+  position: "relative",
+  borderRadius: theme.shape.borderRadius,
+  "&:hover": {
+    backgroundColor: alpha(theme.palette.common.black, 0.1),
+  },
+  width: "80%",
+  height: "46px",
+  display: "flex",
+  alignItems: "center",
+  // [theme.breakpoints.up("sm")]: {
+  //   marginLeft: theme.spacing(1),
+  //   width: "auto",
+  // },
+}));
 
-  const [isSideMenuOpen, setIsSideMenuOpen] =useState(false);
-  const Navigate=useNavigate()
-  const theme = useTheme();
+const SearchIconWrapper = styled("div")(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: "100%",
 
-  const DrawerHeader = styled("div")(({ theme }) => ({
-    display: "flex",
-    alignItems: "center",
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-    justifyContent: "flex-end",
-  }));
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+}));
 
-  const Search = styled("div")(({ theme }) => ({
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    "&:hover": {
-      backgroundColor: alpha(theme.palette.common.black, 0.1),
-    },
-    width: "80%",
-    height: "46px",
-    display: "flex",
-    alignItems: "center",
-    // [theme.breakpoints.up("sm")]: {
-    //   marginLeft: theme.spacing(1),
-    //   width: "auto",
-    // },
-  }));
-
-  const SearchIconWrapper = styled("div")(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: "100%",
-
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  }));
-
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: "inherit",
-    "& .MuiInputBase-input": {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      transition: theme.transitions.create("width"),
-      width: "100%",
-      [theme.breakpoints.up("sm")]: {
-        width: "12ch",
-        "&:focus": {
-          width: "20ch",
-        },
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: "inherit",
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
       },
     },
-  }));
-  
+  },
+}));
+
+const DrawerHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+  justifyContent: "flex-end",
+}));
+
+const Header: React.FC = () => {
+  const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const Navigate = useNavigate();
+  const theme = useTheme();
+
   return (
     <Grid container className="header">
       <Grid
@@ -138,10 +138,15 @@ const Header:React.FC = () => {
           </SearchIconWrapper>
           <StyledInputBase
             onKeyDown={(e: any) => {
+
               if (e.key === "Enter") {
                 Navigate(`/dashboard/search?q=${e.target.value}`);
               }
             }}
+            onChange={(e) => {
+              setSearchValue(e.target.value);
+            }}
+            value={searchValue}
             placeholder="Search…"
             inputProps={{ "aria-label": "search" }}
           />

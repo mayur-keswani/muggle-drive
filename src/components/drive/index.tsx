@@ -26,47 +26,48 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
 
   const [filteredFolders,setFilteredFolders] = useState<FolderStructureType[]>([]);
   const [filteredFiles,setFilteredFiles] = useState<FileStructureType[]>([])
-  const [isFoldersLoading, setIsFoldersLoading] = useState(false);
-  const [isFilesLoading,setIsFilesLoading] = useState(false)
   const [folderType, setFolderType] = useState<SectionType>(MY_DRIVE);
 
-  const { updateNotification } = useContext(NotificationContent);
-  const { folders, setInitialFolderList,sharedToMeFolders, setSharedToMeFoldersList } =
-    useContext(FoldersContent);
-  const { files, setInitialFilesList } = useContext(FilesContext);
+  const {
+    isLoading: isFoldersLoading,
+    folders,
+    setInitialFolderList,
+    sharedToMeFolders,
+  } = useContext(FoldersContent);
+  const { files,isLoading:isFilesLoading, setInitialFilesList } = useContext(FilesContext);
 
   const { sectionType, folderId } = useParams();
 
   
-  const loadFolders = async () => {
-    try {
-      setIsFoldersLoading(true);
-      const response: any = await fetchFolders();
-      setIsFoldersLoading(false);
-      setInitialFolderList(response.data.body.folders.Items);
-      // setSharedToMeFoldersList(response.data.body.sharedToMe.Items);
-    } catch (error: any) {
-      setIsFoldersLoading(false);
-      updateNotification({
-        type: "error",
-        message: error?.response?.error,
-      });
-    }
-  };
-  const loadFiles = async () => {
-    try {
-      setIsFilesLoading(true);
-      const response: any = await fetchFiles();
-      setIsFilesLoading(false);
-      setInitialFilesList(response.data.body.Items);
-    } catch (error: any) {
-      setIsFilesLoading(false);
-      updateNotification({
-        type: "error",
-        message: error?.response?.error
-      });
-    }
-  };
+  // const loadFolders = async () => {
+  //   try {
+  //     setIsFoldersLoading(true);
+  //     const response: any = await fetchFolders();
+  //     setIsFoldersLoading(false);
+  //     setInitialFolderList(response.data.body.folders.Items);
+  //     // setSharedToMeFoldersList(response.data.body.sharedToMe.Items);
+  //   } catch (error: any) {
+  //     setIsFoldersLoading(false);
+  //     updateNotification({
+  //       type: "error",
+  //       message: error?.response?.error,
+  //     });
+  //   }
+  // };
+  // const loadFiles = async () => {
+  //   try {
+  //     setIsFilesLoading(true);
+  //     const response: any = await fetchFiles();
+  //     setIsFilesLoading(false);
+  //     setInitialFilesList(response.data.body.Items);
+  //   } catch (error: any) {
+  //     setIsFilesLoading(false);
+  //     updateNotification({
+  //       type: "error",
+  //       message: error?.response?.error
+  //     });
+  //   }
+  // };
 
   const getSectionType=(param:string)=>{
    switch (param) {
@@ -168,10 +169,6 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
     }
   };
    
-  useEffect(()=>{
-    loadFolders();
-    loadFiles();
-  },[])
 
   useEffect(() => {
     if(sectionType === BIN || sectionType === MY_DRIVE || sectionType===SHARED || sectionType===STARRED || sectionType === COMPUTER){
@@ -181,7 +178,7 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
   
 
   useEffect(() => {
-    setFilteredFiles(getFilteredFiles(folderType, files, folderId ?? "0"));
+    setFilteredFiles(getFilteredFiles(folderType, folderType===SHARED?[]:files, folderId ?? "0"));
     setFilteredFolders(getFilteredFolder(folderType, folderType===SHARED? sharedToMeFolders: folders, folderId ?? "0"));
   }, [folderId, folderType, folders, files]);
 
