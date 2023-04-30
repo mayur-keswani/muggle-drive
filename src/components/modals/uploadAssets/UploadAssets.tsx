@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -34,7 +34,8 @@ const style = {
 type CreateFolderType = {
   isOpen: boolean;
   closeModal: any;
-  parentRef:string
+  parentRef: string;
+  uploadedFolderFiles?: any[];
 };
 type UploadAssetType={
   id: string,
@@ -44,7 +45,7 @@ type UploadAssetType={
   type: string
 }
 
-export default function UploadAssets({ isOpen, closeModal, parentRef }: CreateFolderType) {
+export default function UploadAssets({ isOpen, closeModal, parentRef ,...props}: CreateFolderType) {
 
   const [acceptedFiles, setAcceptedFiles] = useState<UploadAssetType[]>([]);
   const [croppingImage,setCroppingImage] = useState({url:'',id:''})
@@ -56,6 +57,12 @@ export default function UploadAssets({ isOpen, closeModal, parentRef }: CreateFo
   })
   const {addFile}=useContext(FilesContext)
 
+  useEffect(() => {
+    if (props?.uploadedFolderFiles) {
+      setAcceptedFiles(props?.uploadedFolderFiles);
+    }
+  }, [props?.uploadedFolderFiles]);
+  
   const uploadAssetsHandler = async (file: UploadAssetType) => {
     try {
       let fileName = file.name + Date.now();
