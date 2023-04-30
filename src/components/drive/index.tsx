@@ -185,7 +185,7 @@ const MyDrive:React.FC<DashBoardSectionPropType> = (props) => {
   return (
     <>
       <SectionHeader
-        sectionType={MY_DRIVE}
+        sectionType={folderType}
         allowUploading={folderType === MY_DRIVE}
         title={folderType}
         folderId={folderId}
