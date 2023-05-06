@@ -3,9 +3,27 @@ import { MY_DRIVE } from "../context/constants";
 import config from "./config"
 import { FolderStructureType, SectionType } from "./types.index";
 
-export const fetchFolders=()=>{
+export const fetchFoldersAPI=()=>{
     return axios.get(config.apiEndpoint+'/folders')
 }
+export const fetchSharedToMeFoldersAPI = (parentRef: string | null = null) => {
+  return axios.get(config.apiEndpoint + "/folders", {
+    params: {
+      type: "sharedToMe",
+      parentRef,
+    },
+  });
+};
+
+export const fetchSharedToMeFilesAPI = (parentRef:string|null=null) => {
+  
+  return axios.get(config.apiEndpoint + "/files", {
+    params: {
+      type: "sharedToMe",
+      parentRef
+    },
+  });
+};
 
 export const createFolderAPI = async (payload:{name:string,parentRef:string}) => {
   return await axios.post(config.apiEndpoint + "/folders",payload);

@@ -146,7 +146,7 @@ const Asset: React.FC<AssetComponentType> = ({
         />
         <ShareResource
           id={file?.id}
-          type="folder"
+          type="file"
           isOpen={showShareResourceDialog}
           closeModal={() => {
             setShowShareResourceDialog(false);

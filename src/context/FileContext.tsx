@@ -6,15 +6,19 @@ export const FilesContext = React.createContext<{
   updateLoaderState: (value: Boolean) => void;
   files: FileStructureType[];
   setInitialFilesList: (payload: FileStructureType[]) => void;
+  sharedToMeFiles: FileStructureType[];
+  setSharedToMeFilesList: (payload: FileStructureType[]) => void;
   addFile: (payload: FileStructureType) => void;
   removeFile: (id: string, removePermanent: boolean) => void;
   updateFile: (id: string, payload: any) => void;
   recoverFile: (id: string) => void;
 }>({
-  isLoading:false,
-  updateLoaderState:()=>{},
+  isLoading: false,
+  updateLoaderState: () => {},
   files: [],
   setInitialFilesList: () => {},
+  sharedToMeFiles: [],
+  setSharedToMeFilesList: () => {},
   addFile: () => {},
   removeFile: () => {},
   updateFile: () => {},
@@ -24,6 +28,7 @@ export const FilesContext = React.createContext<{
 const FilesProvider = (props: any) => {
   const [isLoading,setIsLoading] = useState<Boolean>(false)
   const [files, setFiles] = useState<FileStructureType[]>([]);
+  const [sharedToMeFiles, setSharedToMeFiles] = useState<FileStructureType[]>([]);
 
 
   const updateLoaderState = (value: Boolean) => {
@@ -67,6 +72,10 @@ const FilesProvider = (props: any) => {
     setFiles([...updatedList]);
   };
 
+    const setSharedToMeFilesList = (payload: FileStructureType[]) => {
+      setSharedToMeFiles(payload);
+    };
+
   return (
     <FilesContext.Provider
       value={{
@@ -78,6 +87,8 @@ const FilesProvider = (props: any) => {
         removeFile,
         updateFile,
         recoverFile,
+        sharedToMeFiles,
+        setSharedToMeFilesList,
       }}
     >
       {props.children}
