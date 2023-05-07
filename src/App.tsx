@@ -11,6 +11,7 @@ import MyDrive from "./components/drive";
 import { UserContext } from "./context/UserContext";
 import Folders from "./components/folders/Folders";
 import SearchComponent from "./components/search/SearchComponent";
+import Account from "./pages/account";
 
 const ProtectedRoute = (props:any) => {
   if (!props.user.isLoggedIn) {
@@ -34,14 +35,30 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route path={`/dashboard/search`} element={<SearchComponent/>}></Route>
-          <Route path={`/dashboard/:sectionType`} element={<MyDrive showFolders={true} showFiles={true}/>}></Route>
-          <Route path={`/dashboard/:sectionType/folders`} element={<MyDrive showFolders={true} showFiles={false}/>} />
-          <Route path={`/dashboard/:sectionType/folders/:folderId`} element={<MyDrive showFolders={true} showFiles={true}/>} />
-          <Route path={`/dashboard/:sectionType/folders/:folderId`} element={<MyDrive showFolders={true} showFiles={true}/>} />
-          <Route path={`/dashboard/:sectionType/files`} element={<MyDrive showFolders={false} showFiles={true}/>} />
-
-          
+          <Route
+            path={`/dashboard/search`}
+            element={<SearchComponent />}
+          ></Route>
+          <Route
+            path={`/dashboard/:sectionType`}
+            element={<MyDrive showFolders={true} showFiles={true} />}
+          ></Route>
+          <Route
+            path={`/dashboard/:sectionType/folders`}
+            element={<MyDrive showFolders={true} showFiles={false} />}
+          />
+          <Route
+            path={`/dashboard/:sectionType/folders/:folderId`}
+            element={<MyDrive showFolders={true} showFiles={true} />}
+          />
+          <Route
+            path={`/dashboard/:sectionType/folders/:folderId`}
+            element={<MyDrive showFolders={true} showFiles={true} />}
+          />
+          <Route
+            path={`/dashboard/:sectionType/files`}
+            element={<MyDrive showFolders={false} showFiles={true} />}
+          />
 
           {/* <Route path={`/dashboard/${COMPUTER}`} element={<Computers showFolders={true} showFiles={true}/>} />
           <Route path={`/dashboard/${COMPUTER}/folders`} element={<Computers showFolders={true} showFiles={false}/>} />
@@ -60,13 +77,12 @@ function App() {
           <Route path={`/dashboard/${RECENT}/folders/:folderId`} element={<Recent showFolders={true} showFiles={true}/>} />
           <Route path={`/dashboard/${RECENT}/folders/:folderId`} element={<Recent showFolders={true} showFiles={true}/>} />
           <Route path={`/dashboard/${RECENT}/files`} element={<Recent showFolders={false} showFiles={true}/>} /> */}
-          
+
           {/* <Route path={`/dashboard/${SHARED}`} element={<Shared showFolders={true} showFiles={true}/>} />
           <Route path={`/dashboard/${SHARED}/folders`} element={<Shared showFolders={true} showFiles={false}/>} />
           <Route path={`/dashboard/${SHARED}/folders/:folderId`} element={<Shared showFolders={true} showFiles={true}/>} />
           <Route path={`/dashboard/${SHARED}/folders/:folderId`} element={<Shared showFolders={true} showFiles={true}/>} />
           <Route path={`/dashboard/${SHARED}/files`} element={<Shared showFolders={false} showFiles={true}/>} /> */}
-
 
           {/* <Route path={`/dashboard/${STARRED}`} element={<Starred showFolders={true} showFiles={true}/>} />
           <Route path={`/dashboard/${STARRED}/folders`} element={<Starred showFolders={true} showFiles={false}/>} />
@@ -93,20 +109,21 @@ function App() {
             </Layout>
           }
         />
-        <Route
-          path="/signup"
-          element={
-            <Layout showHeader={false}>
-              <Signup />
-            </Layout>
-          }
-        />
 
         <Route
           path="/verify"
           element={
             <Layout showHeader={false}>
               <VerifyUser />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/account"
+          element={
+            <Layout showHeader={true}>
+              <Account />
             </Layout>
           }
         />

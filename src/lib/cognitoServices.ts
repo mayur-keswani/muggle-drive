@@ -6,7 +6,6 @@ import {
   CognitoUserSession,
 } from "amazon-cognito-identity-js";
 
-
 export class CognitoService {
   userPool;
 
@@ -133,10 +132,14 @@ export class CognitoService {
    */
   logoutUser() {
     const cognitoUser = this.userPool.getCurrentUser();
-    if (cognitoUser) {
-      cognitoUser.signOut();
-    }
-    return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      if (cognitoUser) {
+        cognitoUser.signOut();
+        resolve(true);
+      } else {
+        reject();
+      }
+    });
   }
 
   /**
@@ -205,6 +208,4 @@ export class CognitoService {
       });
     });
   }
-
-
 }

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React,{useContext} from "react";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
@@ -7,15 +7,16 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import PersonAdd from "@mui/icons-material/PersonAdd";
-import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { clearLocalStorage } from "../../../../lib/localStorage";
 import ThemeChanger from "../ThemeChanger";
+import { UserContext } from "../../../../context/UserContext";
+import { CognitoService } from "../../../../lib/cognitoServices";
 
 
 export default function AccountMenu() {
+  const {user}= useContext(UserContext)
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const open = Boolean(anchorEl);
@@ -25,17 +26,17 @@ export default function AccountMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const logoutHandler = () => {
+  const logoutHandler = async() => {
     clearLocalStorage();
+    const cognitoService = new CognitoService()
+    await cognitoService.logoutUser()
     navigate("/login");
   };
   
   return (
     <React.Fragment>
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
-        <ThemeChanger
-          styles={{ display: { xs: "none", md: "flex" } }}
-        />
+        <ThemeChanger styles={{ display: { xs: "none", md: "flex" } }} />
 
         <Tooltip title="Account settings">
           <IconButton
@@ -46,7 +47,7 @@ export default function AccountMenu() {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+            <Avatar sx={{ width: 32, height: 32 }}>{user.username.split('').slice(0,1)[0]}</Avatar>
           </IconButton>
         </Tooltip>
       </Box>
@@ -85,25 +86,27 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem>
+        {/* <MenuItem>
           <Avatar /> Profile
-        </MenuItem>
-        <MenuItem>
+        </MenuItem> */}
+        <MenuItem onClick={()=>{
+          navigate("/account");
+        }}>
           <Avatar /> My account
         </MenuItem>
         <Divider />
-        <MenuItem>
+        {/* <MenuItem>
           <ListItemIcon>
             <PersonAdd fontSize="small" />
           </ListItemIcon>
           Add another account
-        </MenuItem>
-        <MenuItem>
+        </MenuItem> */}
+        {/* <MenuItem>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
           Settings
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem onClick={logoutHandler}>
           <ListItemIcon>
             <Logout fontSize="small" />
