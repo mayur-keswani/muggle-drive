@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useContext } from "react";
+import UserProfile from '../../components/user-profile/UserProfile';
+import { UserContext } from '../../context/UserContext';
 
 const Account = () => {
+  const {user:{username}} =useContext(UserContext)
   return (
-    <div>index</div>
+    <div><UserProfile username={username}/></div>
   )
 }
 
